@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: no.nav.hm.finnhjelpemiddelbff
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [app-name, data, gradle, http-client-test, junit, kapt, kotlin, kotlin-application, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, openapi, readme, serialization-jackson, shade, static-resources, swagger-ui, testcontainers, yaml, yaml-build]

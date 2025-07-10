@@ -1,0 +1,47 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: hm-finnhjelpemiddel-bff
+  namespace: teamdigihot
+  labels:
+    team: teamdigihot
+spec:
+  image: {{ image }}
+  port: 8080
+  liveness:
+    path: /internal/isAlive
+    initialDelay: 20
+  readiness:
+    path: /internal/isReady
+    initialDelay: 20
+  replicas:
+    min: {{ min_replicas }}
+    max: {{ max_replicas }}
+    cpuThresholdPercentage: 50
+  resources:
+    limits:
+      memory: 1048Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  env:
+    - name: SWAGGER_ENABLED
+      value: "{{ swagger_enabled }}"
+    - name: SERVER_PORT
+      value: "8080"
+    - name: JAVA_OPTS
+      value: "{{ java_opts }}"
+  {{#each env}}
+    - name: {{@key}}
+      value: "{{this}}"
+  {{/each}}
+  accessPolicy:
+    outbound:
+      external:
+        - host: navikt.github.io
+    inbound:
+      rules:
+        - application: hm-oversikt-frontend
