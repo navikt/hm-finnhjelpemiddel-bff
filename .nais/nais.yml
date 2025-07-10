@@ -40,8 +40,8 @@ spec:
   {{/each}}
   accessPolicy:
     outbound:
-      external:
-        - host: navikt.github.io
+      rules:
+        - application: hm-grunndata-search
     inbound:
       rules:
         - application: hm-oversikt-frontend
