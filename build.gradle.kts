@@ -17,7 +17,7 @@ group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
 val kotlinVersion=project.properties.get("kotlinVersion")
-val poiVersion = "5.3.0"
+val poiVersion = "5.4.1"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 val micrometerRegistryPrometheusVersion = "1.9.1"
