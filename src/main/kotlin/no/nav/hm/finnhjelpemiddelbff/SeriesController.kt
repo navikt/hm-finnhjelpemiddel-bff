@@ -9,12 +9,13 @@ import io.swagger.v3.oas.annotations.tags.Tag
 @Controller("/series")
 @Tag(name = "Series")
 class SeriesController(
+    private val searchService: SearchService
 ) {
 
     @Get("/{seriesId}")
     suspend fun getSeries(seriesId: String): HttpResponse<SeriesResponse> {
         return HttpResponse.ok(
-            SeriesResponse(seriesId)
+            SeriesResponse(searchService.getSeries())
         )
     }
 
