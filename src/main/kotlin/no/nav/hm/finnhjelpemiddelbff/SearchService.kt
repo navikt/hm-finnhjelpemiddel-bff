@@ -11,18 +11,18 @@ class SearchService(
     suspend fun getSeries(seriesId: String) : String {
         return searchClient.getSeries("""
             {
-    query: {
-      bool: {
-        must: {
-          term: {
-            seriesId: "$seriesId",
-          },
-        },
-      },
-    },
-    size: 150,
-  }
-        """.trimIndent())
+                "query": {
+                    "bool": {
+                        "must": {
+                            "term": {
+                                "seriesId": "$seriesId"
+                            }
+                        }
+                    }
+                },
+                "size": 150
+            }
+            """.trimIndent())
     }
 
 }
