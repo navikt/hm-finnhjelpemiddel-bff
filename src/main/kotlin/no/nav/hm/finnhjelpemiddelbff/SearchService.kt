@@ -8,14 +8,14 @@ class SearchService(
     private val searchClient: SearchClient
 ) {
 
-    suspend fun getSeries() : String {
+    suspend fun getSeries(seriesId: String) : String {
         return searchClient.getSeries("""
             {
     query: {
       bool: {
         must: {
           term: {
-            seriesId: "de44bdb5-b6bf-4b9d-8572-6c3ad47e661a",
+            seriesId: "$seriesId",
           },
         },
       },
