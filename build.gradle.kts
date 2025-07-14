@@ -21,6 +21,7 @@ val poiVersion = "5.4.1"
 val jvmTarget = "17"
 val kotestVersion = "5.5.5"
 val micrometerRegistryPrometheusVersion = "1.9.1"
+val grunndataDtoVersion = "202504011524"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -47,6 +48,8 @@ dependencies {
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
     implementation("io.micronaut:micronaut-management")
+
+    implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:202405140823")
 
