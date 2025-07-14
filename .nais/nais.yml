@@ -28,6 +28,8 @@ spec:
     enabled: true
     path: /internal/prometheus
   env:
+    - name: SEARCH_URL
+      value: "http://hm-grunndata-search/products/_search"
     - name: SWAGGER_ENABLED
       value: "{{ swagger_enabled }}"
     - name: SERVER_PORT

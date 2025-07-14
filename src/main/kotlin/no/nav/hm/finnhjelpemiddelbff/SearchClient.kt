@@ -5,7 +5,7 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.serde.annotation.Serdeable
 
-@Client("http://hm-grunndata-search/products/_search")
+@Client("\${search-url}")
 interface SearchClient {
 
     @Post(value = "/", produces = [io.micronaut.http.MediaType.APPLICATION_JSON])

@@ -68,3 +68,5 @@ jackson:
   bean-introspection-module: true
   serialization:
     indentOutput: true
+
+search-url: ${SEARCH_URL:`http://localhost:8090/products/_search`}
