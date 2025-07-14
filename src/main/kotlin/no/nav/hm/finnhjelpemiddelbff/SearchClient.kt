@@ -22,15 +22,17 @@ data class SearchResponse(
     val hits: Hits
 )
 
+@Serdeable
 data class Hits(
     val hits: List<Hit>
 )
 
-
+@Serdeable
 data class Hit(
     val _source: ProductSourceResponse
 )
 
+@Serdeable
 data class ProductSourceResponse(
     val id: String,
     val articleName: String
