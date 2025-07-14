@@ -8,7 +8,7 @@ class SearchService(
     private val searchClient: SearchClient
 ) {
 
-    suspend fun getSeries(seriesId: String) : String {
+    suspend fun getSeries(seriesId: String) : SearchResponse {
         return searchClient.getSeries("""
             {
                 "query": {

@@ -13,9 +13,9 @@ class SeriesController(
 ) {
 
     @Get("/{seriesId}")
-    suspend fun getSeries(seriesId: String): HttpResponse<SeriesResponse> {
+    suspend fun getSeries(seriesId: String): HttpResponse<SearchResponse> {
         return HttpResponse.ok(
-            SeriesResponse(searchService.getSeries(seriesId))
+            searchService.getSeries(seriesId)
         )
     }
 
