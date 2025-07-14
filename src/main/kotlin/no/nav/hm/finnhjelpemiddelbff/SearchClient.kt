@@ -1,5 +1,6 @@
 package no.nav.hm.finnhjelpemiddelbff
 
+import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
@@ -13,6 +14,7 @@ interface SearchClient {
 
 }
 
+@Introspected
 data class SearchResponse(
     val took: Int,
     val timed_out: Boolean,
