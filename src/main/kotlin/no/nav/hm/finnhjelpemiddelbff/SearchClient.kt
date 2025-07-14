@@ -1,9 +1,9 @@
 package no.nav.hm.finnhjelpemiddelbff
 
-import io.micronaut.core.annotation.Introspected
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.serde.annotation.Serdeable
 
 @Client("http://hm-grunndata-search/products/_search")
 interface SearchClient {
@@ -14,7 +14,7 @@ interface SearchClient {
 
 }
 
-@Introspected
+@Serdeable
 data class SearchResponse(
     val took: Int,
     val timed_out: Boolean,
