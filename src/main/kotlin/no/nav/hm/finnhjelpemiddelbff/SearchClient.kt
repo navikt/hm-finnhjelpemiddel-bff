@@ -3,11 +3,19 @@ package no.nav.hm.finnhjelpemiddelbff
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.serde.annotation.SerdeImport
 import io.micronaut.serde.annotation.Serdeable
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.TechData
+import java.time.LocalDateTime
+import java.util.UUID
 
+
+
+@SerdeImport(
+    value = TechData::class
+)
 @Client("\${search-url}")
 interface SearchClient {
 
@@ -21,7 +29,6 @@ interface SearchClient {
 data class SearchResponse(
     val took: Int,
     val timed_out: Boolean,
-    //shards
     val hits: Hits
 )
 
@@ -53,7 +60,7 @@ data class ProductSourceResponse(
     val accessory: Boolean,
     val sparePart: Boolean,
     val seriesId: String,
-    //val data: List<TechData>,
+    val data: List<TechData>,
     val main: Boolean,
     val media: List<MediaResponse>,
     val created: String,
@@ -62,7 +69,7 @@ data class ProductSourceResponse(
     val createdBy: String,
     val updatedBy: String,
     //filters: { [key: string]: string },
-    //val agreements: AgreementInfoResponse[],
+    val agreements: List<AgreementResponse>,
     val hasAgreement: Boolean,
 
 
@@ -74,11 +81,10 @@ data class Supplier(
     val identifier: String,
     val name: String,
 
-)
+    )
 
-//er alt optional?
 @Serdeable
-data class AttributeResponse (
+data class AttributeResponse(
     val manufacturer: String?,
     val articlename: String?,
     val compatibleWith: CompatibleWithResponse?,
@@ -93,6 +99,23 @@ data class AttributeResponse (
 )
 
 @Serdeable
+data class AgreementResponse(
+    val id: UUID,
+    val identifier: String?,
+    val title: String?,
+    val label: String,
+    val rank: Int,
+    val postNr: Int,
+    val postIdentifier: String?,
+    val postTitle: String?,
+    val postId: UUID?,
+    val refNr: String?,
+    val reference: String,
+    val published: LocalDateTime,
+    val expired: LocalDateTime,
+)
+
+@Serdeable
 data class MediaResponse(
     val uri: String,
     val priority: Int = 1,
@@ -101,61 +124,7 @@ data class MediaResponse(
 )
 
 @Serdeable
-data class CompatibleWithResponse (
+data class CompatibleWithResponse(
     val seriesIds: List<String>,
     val productIds: List<String>,
 )
-
-/*
-export interface SearchResponse {
-  took: number
-  timed_out: boolean
-  _shards: object
-  hits: {
-    total: object
-    hits: Hit[]
-  }
-}
-
-export interface Hit {
-  _index: string
-  _type: string | null
-  _id: string
-  _score: string
-  _source: ProductSourceResponse
-}
-
-export interface ProductSourceResponse {
-  id: string
-  articleName: string
-  supplier: {
-    id: string
-    identifier: string
-    name: string
-  }
-  title: string
-  attributes: AttributeResponse
-  status: 'INACTIVE' | 'ACTIVE'
-  hmsArtNr: string | null
-  identifier: string
-  supplierRef: string
-  isoCategory: string
-  isoCategoryTitle: string
-  isoCategoryTitleInternational: string
-  isoCategoryText: string
-  accessory: boolean
-  sparePart: boolean
-  seriesId: string
-  data: Array<TechDataResponse>
-  main: boolean
-  media: MediaResponse[]
-  created: string
-  updated: string
-  expired: string
-  createdBy: string
-  updatedBy: string
-  filters: { [key: string]: string }
-  agreements: AgreementInfoResponse[]
-  hasAgreement: boolean
-}
- */
