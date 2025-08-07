@@ -1,0 +1,68 @@
+package no.nav.hm.finnhjelpemiddelbff
+
+import io.kotest.matchers.shouldBe
+import io.micronaut.test.annotation.MockBean
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import org.junit.jupiter.api.Test
+
+@MicronautTest
+class SeriesControllerTest(private val seriesController: SeriesController) {
+
+
+    @MockBean(SearchClient::class)
+    fun mockSearchClient(): SearchClient = mockk<SearchClient>().apply {
+        coEvery {
+            getSeries(any())
+        } answers {
+            SearchResponse(
+                5, false, Hits(
+                    listOf(
+                        Hit(
+                            ProductSourceResponse(
+                                id = "test",
+                                articleName = "test",
+                                supplier = Supplier("test", "test", "test"),
+                                title = "test",
+                                attributes = AttributeResponse(),
+                                status = ProductStatus.ACTIVE,
+                                hmsArtNr = "test",
+                                identifier = "test",
+                                supplierRef = "test",
+                                isoCategory = "test",
+                                isoCategoryTitle = "test",
+                                isoCategoryTitleInternational = "test",
+                                isoCategoryText = "test",
+                                accessory = false,
+                                sparePart = false,
+                                seriesId = "test",
+                                data = emptyList(),
+                                main = true,
+                                media = emptyList(),
+                                created = "2024-02-06T11:58:09.573083",
+                                updated = "2024-02-06T11:58:09.573083",
+                                expired = "2124-02-06T11:58:09.573083",
+                                createdBy = "test",
+                                updatedBy = "test",
+                                agreements = emptyList(),
+                                hasAgreement = false
+
+                            )
+                        )
+                    )
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `testytest`() {
+        runBlocking {
+            val response = seriesController.getSeries("aaa")
+            response.body().series shouldBe "test"
+        }
+    }
+}
