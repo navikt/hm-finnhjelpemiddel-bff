@@ -8,6 +8,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
 @MicronautTest
 class SeriesControllerTest(private val seriesController: SeriesController) {
@@ -42,9 +43,9 @@ class SeriesControllerTest(private val seriesController: SeriesController) {
                                 data = emptyList(),
                                 main = true,
                                 media = emptyList(),
-                                created = "2024-02-06T11:58:09.573083",
-                                updated = "2024-02-06T11:58:09.573083",
-                                expired = "2124-02-06T11:58:09.573083",
+                                created = LocalDateTime.now(),
+                                updated = LocalDateTime.now(),
+                                expired = LocalDateTime.now().plusDays(100),
                                 createdBy = "test",
                                 updatedBy = "test",
                                 agreements = emptyList(),

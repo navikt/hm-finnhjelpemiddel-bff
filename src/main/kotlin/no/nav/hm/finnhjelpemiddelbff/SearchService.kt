@@ -3,6 +3,7 @@ package no.nav.hm.finnhjelpemiddelbff
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import no.nav.hm.grunndata.rapid.dto.MediaType
+import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import java.time.LocalDateTime
 
 
@@ -35,8 +36,8 @@ class SearchService(
     private fun parseSearchResponse(searchResponse: SearchResponse): Series? {
         if (searchResponse.hits.hits.isEmpty()) return null
 
-        val variants = searchResponse.hits.hits
-        val firstVariant = searchResponse.hits.hits.first()._source
+        val variants = searchResponse.hits.hits.map { it._source }
+        val firstVariant = variants.first()
 
         val series = Series(
             id = firstVariant.seriesId,
@@ -56,6 +57,21 @@ class SearchService(
                 url = firstVariant.attributes.url,
             ),
             variantCount = variants.size,
+            variants = variants.map { variant ->
+                Variant(
+                id = variant.id,
+                        status = variant.status,
+                        hmsArtNr = variant.hmsArtNr,
+                        articleName = variant.articleName,
+                        techData = variant.data.associateBy({it.key}, {TechDataField(value = it.value, unit = it.unit)})  ,
+                        hasAgreement = variant.hasAgreement,
+                        expired = variant.expired,
+                        agreements = parseAgreements(variant.agreements),
+                        bestillingsordning = variant.attributes.bestillingsordning ?: false,
+                        digitalSoknad = variant.attributes.digitalSoknad ?: false,
+                        accessory = variant.accessory,
+                        sparePart = variant.sparePart,
+                )},
             isoCategory = firstVariant.isoCategory,
             isoCategoryTitle = firstVariant.isoCategoryTitle,
             isoCategoryTitleInternational = firstVariant.isoCategoryTitleInternational,
@@ -73,7 +89,7 @@ class SearchService(
                 .map { Document(it.uri, it.text ?: "" , updated = it.updated) },
             supplierId = firstVariant.supplier.id,
             supplierName = firstVariant.supplier.name,
-            agreements = parseAgreements(variants.flatMap { it._source.agreements }),
+            agreements = parseAgreements(variants.flatMap { it.agreements }),
             main = firstVariant.main,
         )
 
@@ -100,7 +116,7 @@ data class Series(
     val title: String,
     val attributes: Attributes,
     val variantCount: Int,
-    //val variants: ProductVariant[],
+    val variants: List<Variant>,
     val isoCategory: String,
     val isoCategoryTitle: String,
     val isoCategoryTitleInternational: String,
@@ -115,6 +131,25 @@ data class Series(
     val agreements: List<AgreementInfo>,
     val main: Boolean,
 )
+
+@Serdeable
+data class Variant(
+    val id: String,
+    val status: ProductStatus,
+    val hmsArtNr: String?,
+    val articleName: String,
+    val techData: Map<String, TechDataField>,
+    val hasAgreement: Boolean,
+    val expired: LocalDateTime,
+    val agreements: List<AgreementInfo>,
+    val bestillingsordning: Boolean,
+    val digitalSoknad: Boolean,
+    val accessory: Boolean,
+    val sparePart: Boolean,
+)
+
+@Serdeable
+data class TechDataField(val value: String, val unit: String)
 
 @Serdeable
 data class Attributes(
