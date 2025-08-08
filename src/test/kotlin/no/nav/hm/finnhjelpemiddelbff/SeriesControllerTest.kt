@@ -38,7 +38,7 @@ class SeriesControllerTest(private val seriesController: SeriesController) {
                                 isoCategoryText = "test",
                                 accessory = false,
                                 sparePart = false,
-                                seriesId = "test",
+                                seriesId = "seriesIdTest",
                                 data = emptyList(),
                                 main = true,
                                 media = emptyList(),
@@ -59,10 +59,10 @@ class SeriesControllerTest(private val seriesController: SeriesController) {
     }
 
     @Test
-    fun `testytest`() {
+    fun `series with single variant`() {
         runBlocking {
             val response = seriesController.getSeries("aaa")
-            response.body().series shouldBe "test"
+            response.body().id shouldBe "seriesIdTest"
         }
     }
 }

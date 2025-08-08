@@ -121,6 +121,7 @@ data class MediaResponse(
     val priority: Int = 1,
     val type: MediaType = MediaType.IMAGE,
     val text: String? = null,
+    val updated: LocalDateTime?
 )
 
 @Serdeable
