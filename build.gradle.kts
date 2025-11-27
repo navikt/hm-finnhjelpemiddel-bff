@@ -6,9 +6,9 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.kotlin.kapt") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.4.4"
-    id("io.micronaut.aot") version "4.4.4"
+    id("com.gradleup.shadow") version "8.3.9"
+    id("io.micronaut.application") version "4.5.3"
+    id("io.micronaut.aot") version "4.5.3"
 }
 
 
@@ -16,12 +16,15 @@ plugins {
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
-val kotlinVersion=project.properties.get("kotlinVersion")
-val poiVersion = "5.4.1"
+val kotlinVersion = project.properties["kotlinVersion"]
+val poiVersion = "5.5.0"
 val jvmTarget = "17"
-val kotestVersion = "5.5.5"
-val micrometerRegistryPrometheusVersion = "1.9.1"
-val grunndataDtoVersion = "202504011524"
+val kotestVersion = "5.9.1"
+val micrometerRegistryPrometheusVersion = "1.16.0"
+val grunndataDtoVersion = "202511170912"
+val hmLeaderElectionVersion = "202506021230"
+val log4jVersion = "2.25.2"
+val mockkVersion = "1.14.2"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -43,7 +46,7 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
 
-    implementation("org.apache.logging.log4j:log4j-core:2.24.1")
+    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
 
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
@@ -51,13 +54,13 @@ dependencies {
 
     implementation("no.nav.hm.grunndata:hm-grunndata-rapid-dto:$grunndataDtoVersion")
 
-    implementation("com.github.navikt:hm-micronaut-leaderelection:202405140823")
+    implementation("com.github.navikt:hm-micronaut-leaderelection:$hmLeaderElectionVersion")
 
     testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("io.mockk:mockk:$mockkVersion")
 
 
 }
