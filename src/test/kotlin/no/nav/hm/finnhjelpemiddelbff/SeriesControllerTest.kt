@@ -12,8 +12,7 @@ import java.time.LocalDateTime
 
 @MicronautTest
 class SeriesControllerTest(private val seriesController: SeriesController) {
-
-
+    
     @MockBean(SearchClient::class)
     fun mockSearchClient(): SearchClient = mockk<SearchClient>().apply {
         coEvery {

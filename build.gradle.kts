@@ -11,8 +11,6 @@ plugins {
     id("io.micronaut.aot") version "4.5.3"
 }
 
-
-
 group = "no.nav.hm"
 version = properties["version"] ?: "local-build"
 
@@ -134,5 +132,3 @@ repositories {
     maven("https://packages.confluent.io/maven/")
     maven("https://github-package-registry-mirror.gc.nav.no/cached/maven-release")
 }
-
-

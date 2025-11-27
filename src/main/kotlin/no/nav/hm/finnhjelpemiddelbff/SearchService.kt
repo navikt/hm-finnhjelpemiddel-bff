@@ -11,7 +11,7 @@ class SearchService(
     private val searchClient: SearchClient
 ) {
 
-    suspend fun getSeries(seriesId: String): Series? {
+    suspend fun getSeries(seriesId: String): Series {
         val response = searchClient.getSeries(
             """
             {
