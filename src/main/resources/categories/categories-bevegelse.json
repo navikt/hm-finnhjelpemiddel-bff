@@ -1,0 +1,341 @@
+[
+  {
+    "name": "Bevegelse",
+    "description": "",
+    "subCategories": [
+      "Ganghjelpemidler",
+      "Rullestoler",
+      "Forflytning",
+      "Sykler",
+      "Kjelker og akebrett",
+      "Vogner",
+      "Bilseter og bilutstyr"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Rullestoler",
+    "description": "",
+    "subCategories": [
+      "Manuelle rullestoler",
+      "Elektriske rullestoler",
+      "Motoriserte kjøretøy",
+      "Drivaggregat",
+      "Tilleggsutstyr til rullestoler"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Manuelle rullestoler",
+    "description": "Hjelpemidler som gir mobilitet og sittende støtte for personer med begrenset bevegelighet, der brukeren selv eller en ledsager kjører rullestolen manuelt.",
+    "subCategories": [],
+    "isos": [
+      "1222",
+      "122704"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Ganghjelpemidler",
+    "description": "",
+    "subCategories": [
+      "Krykker, stokker og staver",
+      "Gåstativer",
+      "Rullatorer",
+      "Gåstoler",
+      "Gåbord",
+      "Tilleggsutstyr til ganghjelpemidler"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Forflytning",
+    "description": "",
+    "subCategories": [
+      "Trappeklatrere",
+      "Hjelpemidler for å endre kroppsstilling",
+      "Personløftere"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Trappeklatrere",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121703"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Hjelpemidler for å endre kroppsstilling",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "1231"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Personløftere",
+    "description": "",
+    "isos": [],
+    "subCategories": [
+      "Stasjonære personløftere",
+      "Mobile personløftere",
+      "Seil og seler"
+    ],
+    "showProducts": false
+  },
+  {
+    "name": "Stasjonære personløftere",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "123612",
+      "123615"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Mobile personløftere",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "123603",
+      "123604",
+      "123606"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Seil og seler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "123621"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Sykler",
+    "description": "",
+    "subCategories": [
+      "Tandemsykler",
+      "Tohjulssykler",
+      "Tre- og firehjulssykler",
+      "Hjulspark og sparkesykler",
+      "Tilleggsutstyr til sykler"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Tandemsykler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121815"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Tohjulssykler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121804"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Tre- og firehjulssykler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121806",
+      "121807",
+      "120809"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Hjulspark og sparkesykler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121812"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Tilleggsutstyr til sykler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121821"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Kjelker og akebrett",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "122710"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Vogner",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "122707",
+      "122715"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Bilseter og bilutstyr",
+    "description": "",
+    "subCategories": [
+      "Bilseter og bilputer",
+      "Lette inn- og utstigning av bil",
+      "Belter og støtteseler for bil",
+      "Ramper for bil"
+    ],
+    "isos": [],
+    "showProducts": false
+  },
+  {
+    "name": "Bilseter og bilputer",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121212"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Lette inn- og utstigning av bil",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121281"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Belter og støtteseler for bil",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121209"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Ramper for bil",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "121221"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Elektriske rullestoler",
+    "description": "Hjelpemidler som drives med motor, og som gir mulighet for mobilitet og sittende støtte for personer med redusert forflytningsevne. Motoren kan ha framdrift som er elektrisk eller forbrenningsbasert. ",
+    "subCategories": [],
+    "isos": [
+      "1223"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Motoriserte kjøretøy",
+    "description": "Diverse motoriserte kjøretøy med 4 hjul. Omfatter f.eks. terrenggående kjøretøy (ATV), firehjulinger og gokarter. ",
+    "subCategories": [],
+    "isos": [
+      "121709"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Drivaggregat",
+    "description": "Hjelpemidler som monteres på en manuell rullestol, som gjør det mulig for brukeren eller ledsageren å manøvrere eller kjøre rullestolen uten bruk av muskelkraft.",
+    "subCategories": [],
+    "isos": [
+      "122409"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Tilleggsutstyr til rullestoler",
+    "description": "Utstyr relatert til bruk av rullestoler.",
+    "subCategories": [],
+    "isos": [
+      "1224"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Krykker, stokker og staver",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "1203"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Gåstativer",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "120603"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Rullatorer",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "120606"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Gåstoler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "120606"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Gåbord",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "120612"
+    ],
+    "showProducts": true
+  },
+  {
+    "name": "Tilleggsutstyr til ganghjelpemidler",
+    "description": "",
+    "subCategories": [],
+    "isos": [
+      "1207"
+    ],
+    "showProducts": true
+  }
+]
