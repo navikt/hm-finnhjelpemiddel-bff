@@ -44,6 +44,7 @@ spec:
     outbound:
       rules:
         - application: hm-grunndata-search
+        - application: hm-grunndata-db
     inbound:
       rules:
         - application: hm-oversikt-frontend
