@@ -6,7 +6,7 @@ import io.micronaut.serde.annotation.Serdeable
 data class Category(
     val name: String,
     val description: String,
-    val subCategories: List<Category>,
+    val subCategories: List<String>,
     val isos: List<String>,
     val showProducts: Boolean
 )

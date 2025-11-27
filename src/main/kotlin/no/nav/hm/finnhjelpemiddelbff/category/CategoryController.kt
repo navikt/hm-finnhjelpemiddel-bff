@@ -15,18 +15,16 @@ class CategoryController(private val categoryService: CategoryService) {
     }
 
     @Get("/categories")
-    suspend fun getCategories(): HttpResponse<List<Category>> = try {
-        categoryService.getAllCategories()
-        HttpResponse.ok()
+    fun getCategories(): HttpResponse<List<Category>> = try {
+        HttpResponse.ok(categoryService.getAllCategories())
     } catch (exception: Exception) {
         LOG.error("Failed to get categories", exception)
         HttpResponse.serverError()
     }
 
     @Get("/{category}")
-    suspend fun getCategory(category: String): HttpResponse<Category> = try {
-        categoryService.getCategory(category)
-        HttpResponse.ok()
+    fun getCategory(category: String): HttpResponse<Category> = try {
+        HttpResponse.ok(categoryService.getCategory(category))
     } catch (exception: Exception) {
         LOG.error("Failed to get category $category", exception)
         HttpResponse.serverError()
