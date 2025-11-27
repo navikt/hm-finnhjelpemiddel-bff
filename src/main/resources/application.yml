@@ -69,4 +69,5 @@ jackson:
   serialization:
     indentOutput: true
 
-search-url: ${SEARCH_URL:`http://localhost:8080/products/_search`}
+search.url: ${SEARCH_URL:`http://localhost:8080/products/_search`}
+grunndata-db.url: ${GRUNNDATA_DB_URL:`http://localhost:1337/`}

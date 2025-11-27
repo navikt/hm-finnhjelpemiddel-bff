@@ -16,7 +16,7 @@ import java.util.UUID
 @SerdeImport(
     value = TechData::class
 )
-@Client("\${search-url}")
+@Client("\${search.url}")
 interface SearchClient {
 
     @Post(value = "/", produces = [io.micronaut.http.MediaType.APPLICATION_JSON])
