@@ -5,11 +5,16 @@ import jakarta.inject.Singleton
 import java.time.LocalDateTime
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
+import org.slf4j.LoggerFactory
 
 @Singleton
 class SearchService(
     private val searchClient: SearchClient
 ) {
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(SearchService::class.java)
+    }
 
     suspend fun getSeries(seriesId: String): Series {
         val response = searchClient.getSeries(

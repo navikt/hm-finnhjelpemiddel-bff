@@ -1,2 +1,1 @@
 # hm-finnhjelpemiddel-bff
-hei
