@@ -36,6 +36,8 @@ spec:
       value: "8080"
     - name: JAVA_OPTS
       value: "{{ java_opts }}"
+    - name: DB_DRIVER
+      value: "org.postgresql.Driver"
   {{#each env}}
     - name: {{@key}}
       value: "{{this}}"
