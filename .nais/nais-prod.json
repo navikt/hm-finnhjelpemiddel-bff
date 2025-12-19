@@ -4,6 +4,8 @@
   "cookie_domain": "finnhjelpemiddel.nav.no",
   "schedulers_enabled": true,
   "java_opts": "-Xms256m -Xmx2048m -XX:+UseG1GC",
+  "disk_tier": "db-custom-1-3840",
+  "disk_size": 10,
   "env": {
   }
 }

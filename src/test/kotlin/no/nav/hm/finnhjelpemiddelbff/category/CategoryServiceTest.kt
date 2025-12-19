@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 class CategoryServiceTest(private val categoryService: CategoryService) {
 
     private val bevegelse = Category(
+        id = null,
         name = "Bevegelse",
         description = "",
         subCategories = listOf(

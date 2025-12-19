@@ -48,3 +48,17 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
+  gcp:
+    sqlInstances:
+      - name: hm-finnhjelpemiddel-bff-db
+        type: POSTGRES_18
+        tier: {{disk_tier}}
+        diskType: SSD
+        highAvailability: true
+        diskSize: {{disk_size}}
+        diskAutoresize: true
+        autoBackupHour: 3
+        databases:
+          - name: finnhjelpemiddelbff
+            envVarPrefix: DB
+        cascadingDelete: false
