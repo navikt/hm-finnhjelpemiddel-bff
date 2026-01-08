@@ -7,8 +7,8 @@ plugins {
     id("org.jetbrains.kotlin.kapt") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
     id("com.gradleup.shadow") version "8.3.9"
-    id("io.micronaut.application") version "4.5.3"
-    id("io.micronaut.aot") version "4.5.3"
+    id("io.micronaut.application") version "4.6.1"
+    id("io.micronaut.aot") version "4.6.1"
 }
 
 group = "no.nav.hm"
