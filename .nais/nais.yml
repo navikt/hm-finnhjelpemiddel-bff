@@ -50,6 +50,9 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
+        - application: azure-token-generator
+          namespace: nais
+          cluster: dev-gcp
   gcp:
     sqlInstances:
       - name: hm-finnhjelpemiddel-bff-db
