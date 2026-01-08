@@ -88,3 +88,14 @@ flyway:
   datasources:
     default:
       locations: classpath:db
+
+azure:
+  client:
+    id: ${AZURE_APP_CLIENT_ID:`123`}
+    secret: ${AZURE_APP_CLIENT_SECRET:`123secret`}
+  scope: ${AZURE_SCOPE_OEBS_PROXY:`123scope`}
+  endpoint: ${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT:`localhost`}
+  grant:
+    type: client_credentials
+  introspection:
+    endpoint: ${NAIS_TOKEN_INTROSPECTION_ENDPOINT:`localhost`}
