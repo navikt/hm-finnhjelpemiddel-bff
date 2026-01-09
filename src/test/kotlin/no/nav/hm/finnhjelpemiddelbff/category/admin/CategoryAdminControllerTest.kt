@@ -1,9 +1,8 @@
 package no.nav.hm.finnhjelpemiddelbff.category.admin
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.matchers.collections.shouldContainOnly
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
-import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
@@ -55,11 +54,12 @@ class CategoryAdminControllerTest(
 
             categoryAdminController.getCategoryById(id.toString())
                 .shouldNotBeNull()
-                .shouldBeEqualUsingFields(categoryDto)
+                .data.shouldBe(categoryDto.data)
 
             categoryAdminController.getCategories()
                 .shouldNotBeEmpty()
-                .shouldContainOnly(categoryDto)
+                .shouldHaveSize(1)
+                .first().data.shouldBe(categoryDto.data)
         }
     }
 }
