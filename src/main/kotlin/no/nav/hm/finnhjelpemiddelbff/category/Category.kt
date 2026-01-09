@@ -1,8 +1,10 @@
 package no.nav.hm.finnhjelpemiddelbff.category
 
+import com.fasterxml.jackson.databind.JsonNode
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
-import io.micronaut.data.model.JsonDataType
+import io.micronaut.data.annotation.TypeDef
+import io.micronaut.data.model.DataType
 import io.micronaut.serde.annotation.Serdeable
 import java.time.LocalDateTime
 import java.util.UUID
@@ -22,6 +24,7 @@ data class Category(
 data class CategoryDto(
     @field:Id
     val id: UUID = UUID.randomUUID(),
-    val data: JsonDataType,
+    @field:TypeDef(type = DataType.JSON)
+    val data: JsonNode,
     val created: LocalDateTime = LocalDateTime.now()
 )
