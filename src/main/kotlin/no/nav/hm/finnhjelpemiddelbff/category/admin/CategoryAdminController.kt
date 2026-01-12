@@ -3,20 +3,21 @@ package no.nav.hm.finnhjelpemiddelbff.category.admin
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import io.swagger.v3.oas.annotations.tags.Tag
-import java.util.UUID
-import kotlinx.coroutines.flow.toCollection
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.finnhjelpemiddelbff.auth.AuthBody
 import no.nav.hm.finnhjelpemiddelbff.auth.AzureAdUserClient
 import no.nav.hm.finnhjelpemiddelbff.category.CategoryDto
 import no.nav.hm.finnhjelpemiddelbff.category.CategoryRepository
+import no.nav.hm.finnhjelpemiddelbff.category.CreateCategoryDto
 import org.slf4j.LoggerFactory
+import java.util.UUID
 
 
 @Controller("/admin/category")
@@ -33,16 +34,16 @@ class CategoryAdminController(
     @Post("/")
     suspend fun createCategory(
         @Header("Authorization") authorization: String,
-        @Body categoryDto: CategoryDto
+        @Body newCategoryDto: CreateCategoryDto
     ): HttpResponse<String> =
         authenticated(authorization) {
             try {
                 runBlocking {
-                    categoryRepository.save(categoryDto)
+                    categoryRepository.save(CategoryDto(data=newCategoryDto.data))
                 }
                 HttpResponse.ok()
             } catch (exception: Exception) {
-                LOG.error("Failed to create new category \"$categoryDto\"", exception)
+                LOG.error("Failed to create new category \"$newCategoryDto\"", exception)
                 HttpResponse.serverError()
             }
         }
@@ -67,6 +68,9 @@ class CategoryAdminController(
 
     @Get("/id/{id}")
     suspend fun getCategoryById(id: String) = categoryRepository.findById(UUID.fromString(id))
+
+    @Delete("/id/{id}")
+    suspend fun deleteCategory(id: String) = categoryRepository.deleteById(UUID.fromString(id))
 
     @Get("/")
     suspend fun getCategories() = categoryRepository.findAll().toList()

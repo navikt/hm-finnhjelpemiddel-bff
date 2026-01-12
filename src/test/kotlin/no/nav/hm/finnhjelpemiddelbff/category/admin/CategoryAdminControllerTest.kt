@@ -10,11 +10,10 @@ import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.mockk.coEvery
 import io.mockk.mockk
-import java.util.UUID
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.finnhjelpemiddelbff.auth.AuthResponse
 import no.nav.hm.finnhjelpemiddelbff.auth.AzureAdUserClient
-import no.nav.hm.finnhjelpemiddelbff.category.CategoryDto
+import no.nav.hm.finnhjelpemiddelbff.category.CreateCategoryDto
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
@@ -42,24 +41,23 @@ class CategoryAdminControllerTest(
             }
         """.trimIndent()
 
-        val id = UUID.randomUUID()
-
-        val categoryDto = CategoryDto(id = id, data = objectMapper.readTree(data))
+        val categoryDto = CreateCategoryDto(data = objectMapper.readTree(data))
 
         runBlocking {
             categoryAdminController.createCategory(
                 authorization = "auth",
-                categoryDto = categoryDto
+                newCategoryDto = categoryDto
             ).status shouldBe HttpStatus.OK
 
-            categoryAdminController.getCategoryById(id.toString())
-                .shouldNotBeNull()
-                .data.shouldBe(categoryDto.data)
+            val categories = categoryAdminController.getCategories()
 
-            categoryAdminController.getCategories()
-                .shouldNotBeEmpty()
+            categories.shouldNotBeEmpty()
                 .shouldHaveSize(1)
                 .first().data.shouldBe(categoryDto.data)
+
+            categoryAdminController.getCategoryById(categories.first().id.toString())
+                .shouldNotBeNull()
+                .data.shouldBe(categoryDto.data)
         }
     }
 }

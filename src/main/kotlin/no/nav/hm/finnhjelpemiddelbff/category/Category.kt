@@ -28,3 +28,9 @@ data class CategoryDto(
     val data: JsonNode,
     val created: LocalDateTime = LocalDateTime.now()
 )
+
+@Serdeable
+data class CreateCategoryDto(
+    @field:TypeDef(type = DataType.JSON)
+    val data: JsonNode,
+)
