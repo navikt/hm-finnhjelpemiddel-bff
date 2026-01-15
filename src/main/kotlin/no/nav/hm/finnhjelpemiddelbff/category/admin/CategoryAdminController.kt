@@ -38,6 +38,10 @@ class CategoryAdminController(
     ): HttpResponse<String> =
         authenticated(authorization) {
             try {
+                if(!newCategoryDto.data.has("name") || newCategoryDto.data.get("name").toString() == "") {
+                    HttpResponse.badRequest("Missing category name")
+                }
+
                 runBlocking {
                     categoryRepository.save(CategoryDto(data=newCategoryDto.data))
                 }
