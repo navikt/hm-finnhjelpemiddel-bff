@@ -70,7 +70,21 @@ class CategoryAdminController(
     suspend fun getCategoryById(id: String) = categoryRepository.findById(UUID.fromString(id))
 
     @Delete("/id/{id}")
-    suspend fun deleteCategory(id: String) = categoryRepository.deleteById(UUID.fromString(id))
+    suspend fun deleteCategory(
+        @Header("Authorization") authorization: String,
+        id: String
+    ): HttpResponse<String> = authenticated(authorization) {
+        try {
+            runBlocking {
+                categoryRepository.deleteById(UUID.fromString(id))
+            }
+            HttpResponse.ok()
+        } catch (exception: Exception) {
+            LOG.error("Failed to delete category \"$id\"", exception)
+            HttpResponse.serverError()
+        }
+    }
+
 
     @Get("/")
     suspend fun getCategories() = categoryRepository.findAll().toList()
