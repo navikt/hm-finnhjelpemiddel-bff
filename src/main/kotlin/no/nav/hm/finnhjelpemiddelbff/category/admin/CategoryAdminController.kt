@@ -42,10 +42,10 @@ class CategoryAdminController(
                     HttpResponse.badRequest("Missing category name")
                 }
 
-                runBlocking {
+                val category = runBlocking {
                     categoryRepository.save(CategoryDto(data=newCategoryDto.data))
                 }
-                HttpResponse.ok()
+                HttpResponse.ok(category.id.toString())
             } catch (exception: Exception) {
                 LOG.error("Failed to create new category \"$newCategoryDto\"", exception)
                 HttpResponse.serverError()
