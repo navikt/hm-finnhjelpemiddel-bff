@@ -88,9 +88,6 @@ flyway:
   datasources:
     default:
       locations: classpath:db
-      clean-disabled: false
-      clean-on-validation-error: true
-      clean-schema: true
 
 azure:
   client:
