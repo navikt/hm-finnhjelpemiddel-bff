@@ -39,7 +39,7 @@ class CategoryAdminController(
         authenticated(authorization) {
             try {
                 if(!newCategoryDto.data.has("name") || newCategoryDto.data.get("name").toString() == "") {
-                    HttpResponse.badRequest("Missing category name")
+                    return@authenticated HttpResponse.badRequest("Missing category name")
                 }
 
                 val category = runBlocking {

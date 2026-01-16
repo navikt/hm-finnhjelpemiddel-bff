@@ -44,20 +44,38 @@ class CategoryAdminControllerTest(
         val categoryDto = CreateCategoryDto(data = objectMapper.readTree(data))
 
         runBlocking {
+            val createCategoryResponse = categoryAdminController.createCategory(
+                authorization = "auth",
+                newCategoryDto = categoryDto
+            )
+            createCategoryResponse.status shouldBe HttpStatus.OK
+            val categoryId = createCategoryResponse.body()
+
+            categoryAdminController.getCategoryById(categoryId)
+                .shouldNotBeNull()
+                .data.shouldBe(categoryDto.data)
+
+            categoryAdminController.getCategories().shouldNotBeEmpty()
+                .shouldHaveSize(1)
+                .first().data.shouldBe(categoryDto.data)
+        }
+    }
+
+    @Test
+    fun requireName() {
+        @Language("JSON") val data = """
+            {
+            "description": "Dette er en kategori"
+            }
+        """.trimIndent()
+
+        val categoryDto = CreateCategoryDto(data = objectMapper.readTree(data))
+
+        runBlocking {
             categoryAdminController.createCategory(
                 authorization = "auth",
                 newCategoryDto = categoryDto
-            ).status shouldBe HttpStatus.OK
-
-            val categories = categoryAdminController.getCategories()
-
-            categories.shouldNotBeEmpty()
-                .shouldHaveSize(1)
-                .first().data.shouldBe(categoryDto.data)
-
-            categoryAdminController.getCategoryById(categories.first().id.toString())
-                .shouldNotBeNull()
-                .data.shouldBe(categoryDto.data)
+            ).status shouldBe HttpStatus.BAD_REQUEST
         }
     }
 }
