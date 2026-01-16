@@ -63,18 +63,30 @@ class CategoryAdminControllerTest(
 
     @Test
     fun requireName() {
-        @Language("JSON") val data = """
+        @Language("JSON") val dataMissingName = """
             {
             "description": "Dette er en kategori"
             }
         """.trimIndent()
 
-        val categoryDto = CreateCategoryDto(data = objectMapper.readTree(data))
+        runBlocking {
+            categoryAdminController.createCategory(
+                authorization = "auth",
+                newCategoryDto = CreateCategoryDto(data = objectMapper.readTree(dataMissingName))
+            ).status shouldBe HttpStatus.BAD_REQUEST
+        }
+
+        @Language("JSON") val dataBlankName = """
+            {
+            "description": "Dette er en kategori",
+            "name": ""
+            }
+        """.trimIndent()
 
         runBlocking {
             categoryAdminController.createCategory(
                 authorization = "auth",
-                newCategoryDto = categoryDto
+                newCategoryDto = CreateCategoryDto(data = objectMapper.readTree(dataBlankName))
             ).status shouldBe HttpStatus.BAD_REQUEST
         }
     }

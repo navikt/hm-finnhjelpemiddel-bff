@@ -38,7 +38,7 @@ class CategoryAdminController(
     ): HttpResponse<String> =
         authenticated(authorization) {
             try {
-                if(!newCategoryDto.data.has("name") || newCategoryDto.data.get("name").toString() == "") {
+                if(!newCategoryDto.data.has("name") || newCategoryDto.data.get("name").asText() == "") {
                     return@authenticated HttpResponse.badRequest("Missing category name")
                 }
 
