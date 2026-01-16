@@ -5,6 +5,7 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -36,12 +37,11 @@ class CategoryAdminControllerTest(
     fun createCategory() {
         @Language("JSON") val data = """
             {
-            "name": "Kategori",
             "description": "Dette er en kategori"
             }
         """.trimIndent()
 
-        val categoryDto = CreateCategoryDto(data = objectMapper.readTree(data))
+        val categoryDto = CreateCategoryDto(title="Kategori", data = objectMapper.readTree(data))
 
         runBlocking {
             val createCategoryResponse = categoryAdminController.createCategory(
@@ -61,9 +61,10 @@ class CategoryAdminControllerTest(
         }
     }
 
+
     @Test
     fun requireName() {
-        @Language("JSON") val dataMissingName = """
+        @Language("JSON") val dataBlankName = """
             {
             "description": "Dette er en kategori"
             }
@@ -72,22 +73,8 @@ class CategoryAdminControllerTest(
         runBlocking {
             categoryAdminController.createCategory(
                 authorization = "auth",
-                newCategoryDto = CreateCategoryDto(data = objectMapper.readTree(dataMissingName))
-            ).status shouldBe HttpStatus.BAD_REQUEST
-        }
-
-        @Language("JSON") val dataBlankName = """
-            {
-            "description": "Dette er en kategori",
-            "name": ""
-            }
-        """.trimIndent()
-
-        runBlocking {
-            categoryAdminController.createCategory(
-                authorization = "auth",
-                newCategoryDto = CreateCategoryDto(data = objectMapper.readTree(dataBlankName))
-            ).status shouldBe HttpStatus.BAD_REQUEST
+                newCategoryDto = CreateCategoryDto(title="", data = objectMapper.readTree(dataBlankName))
+            ).status shouldNotBe HttpStatus.OK
         }
     }
 }

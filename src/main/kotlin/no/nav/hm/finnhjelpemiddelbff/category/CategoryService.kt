@@ -26,5 +26,5 @@ class CategoryService(private val objectMapper: ObjectMapper) {
 
     fun getAllCategories(): List<Category> = categories
 
-    fun getCategory(category: String) = categories.find { it.name == category }
+    fun getCategory(category: String) = categories.find { it.title == category }
 }

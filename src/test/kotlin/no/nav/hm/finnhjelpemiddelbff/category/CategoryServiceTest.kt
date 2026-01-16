@@ -12,7 +12,7 @@ class CategoryServiceTest(private val categoryService: CategoryService) {
 
     private val bevegelse = Category(
         id = null,
-        name = "Bevegelse",
+        title = "Bevegelse",
         description = "",
         subCategories = listOf(
             "Ganghjelpemidler",

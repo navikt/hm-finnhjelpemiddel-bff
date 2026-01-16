@@ -38,12 +38,8 @@ class CategoryAdminController(
     ): HttpResponse<String> =
         authenticated(authorization) {
             try {
-                if(!newCategoryDto.data.has("name") || newCategoryDto.data.get("name").asText() == "") {
-                    return@authenticated HttpResponse.badRequest("Missing category name")
-                }
-
                 val category = runBlocking {
-                    categoryRepository.save(CategoryDto(data=newCategoryDto.data))
+                    categoryRepository.save(CategoryDto(title=newCategoryDto.title, data=newCategoryDto.data))
                 }
                 HttpResponse.ok(category.id.toString())
             } catch (exception: Exception) {

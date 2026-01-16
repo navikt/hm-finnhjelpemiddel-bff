@@ -12,7 +12,7 @@ import java.util.UUID
 @Serdeable
 data class Category(
     val id: UUID? = UUID.randomUUID(),
-    val name: String,
+    val title: String,
     val description: String?,
     val subCategories: List<String>?,
     val isos: List<String>?,
@@ -24,6 +24,7 @@ data class Category(
 data class CategoryDto(
     @field:Id
     val id: UUID = UUID.randomUUID(),
+    val title: String,
     @field:TypeDef(type = DataType.JSON)
     val data: JsonNode,
     val created: LocalDateTime = LocalDateTime.now()
@@ -31,6 +32,7 @@ data class CategoryDto(
 
 @Serdeable
 data class CreateCategoryDto(
+    val title: String,
     @field:TypeDef(type = DataType.JSON)
     val data: JsonNode,
 )
