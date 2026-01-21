@@ -6,4 +6,6 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.UUID
 
 @JdbcRepository(dialect = Dialect.POSTGRES)
-interface CategoryRepository : CoroutineCrudRepository<CategoryDto, UUID> 
+interface CategoryRepository : CoroutineCrudRepository<CategoryDto, UUID> {
+    fun findByIdInList(ids: List<UUID>): List<CategoryDto>
+}

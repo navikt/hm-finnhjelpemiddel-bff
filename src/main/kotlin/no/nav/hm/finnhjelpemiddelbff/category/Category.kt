@@ -10,16 +10,6 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @Serdeable
-data class Category(
-    val id: UUID? = UUID.randomUUID(),
-    val title: String,
-    val description: String?,
-    val subCategories: List<String>?,
-    val isos: List<String>?,
-    val showProducts: Boolean
-)
-
-@Serdeable
 @MappedEntity("category")
 data class CategoryDto(
     @field:Id
@@ -36,3 +26,13 @@ data class CreateCategoryDto(
     @field:TypeDef(type = DataType.JSON)
     val data: JsonNode,
 )
+
+@Serdeable
+data class CategoryOut(
+    val id: UUID? = UUID.randomUUID(),
+    val title: String,
+    val subCategories: List<SubCategory>,
+    val data: JsonNode
+)
+
+data class SubCategory(val id: UUID, val title: String)
