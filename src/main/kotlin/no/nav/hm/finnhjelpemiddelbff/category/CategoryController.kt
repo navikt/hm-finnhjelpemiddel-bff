@@ -31,7 +31,7 @@ class CategoryController(
         subCategories =
             categoryRepository.findByIdInList(
                 data["subCategories"]?.map { UUID.fromString(it.asText()) }.orEmpty()
-            ).map { SubCategory(it.id, it.title, it.data["ikon"]?.asText().orEmpty()) },
+            ).map { SubCategory(it.id, it.title, it.data["icon"]?.asText().orEmpty()) },
         data = data
     )
 }

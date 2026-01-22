@@ -67,20 +67,20 @@ class CategoryControllerTest(
         @Language("JSON") val dataSub = """
             {
             "description": "Dette er en kategori",
-            "ikon": "<svg></svg>"
+            "icon": "<svg></svg>"
             }
         """.trimIndent()
         val categoryDto = CategoryDto(title = "Kategori 1", data = objectMapper.readTree(dataSub))
 
         val dataDescription = "Testert i testen"
         val dataSubCategories = "${categoryDto.id}"
-        val dataIkon = "<svg></svg>"
+        val dataIcon = "<svg></svg>"
 
         @Language("JSON") val data = """
             {
             "description": "$dataDescription",
             "subCategories": ["$dataSubCategories"],
-            "ikon": "$dataIkon"
+            "icon": "$dataIcon"
             }
         """.trimIndent()
         val categoryWithData = CategoryDto(title = "Kategori 2", data = objectMapper.readTree(data))
@@ -91,7 +91,7 @@ class CategoryControllerTest(
             val responseCategoryWithData = categoryController.getCategory(categoryWithData.title)
 
             val subCategory =
-                SubCategory(categoryDto.id, categoryDto.title, categoryDto.data["ikon"].asText().orEmpty())
+                SubCategory(categoryDto.id, categoryDto.title, categoryDto.data["icon"].asText().orEmpty())
 
             responseCategoryWithData.status shouldBe HttpStatus.OK
             (responseCategoryWithData.body() as CategoryOut).let {
@@ -100,7 +100,7 @@ class CategoryControllerTest(
                 it.subCategories shouldBe arrayListOf(subCategory)
                 it.data["description"].asText() shouldBe dataDescription
                 it.data["subCategories"].get(0).asText() shouldBe dataSubCategories
-                it.data["ikon"].asText() shouldBe dataIkon
+                it.data["icon"].asText() shouldBe dataIcon
             }
         }
     }
