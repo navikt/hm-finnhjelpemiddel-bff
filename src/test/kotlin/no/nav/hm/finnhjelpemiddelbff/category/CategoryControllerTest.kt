@@ -5,7 +5,6 @@ import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
-import java.util.UUID
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.intellij.lang.annotations.Language
@@ -38,7 +37,7 @@ class CategoryControllerTest(
         runBlocking {
             categoryRepository.saveAll(listOf(categoryDto, categoryWithSubcategory)).toList() shouldHaveSize 2
 
-            val responseCategoryWithSubcategory = categoryController.getCategory(categoryWithSubcategory.id.toString())
+            val responseCategoryWithSubcategory = categoryController.getCategory(categoryWithSubcategory.title)
             responseCategoryWithSubcategory.status shouldBe HttpStatus.OK
             (responseCategoryWithSubcategory.body() as CategoryOut).let {
                 it.id shouldBe categoryWithSubcategory.id
@@ -46,7 +45,7 @@ class CategoryControllerTest(
                 it.subCategories shouldHaveSize 1
             }
 
-            val responseCategoryDto = categoryController.getCategory(categoryDto.id.toString())
+            val responseCategoryDto = categoryController.getCategory(categoryDto.title)
             responseCategoryDto.status shouldBe HttpStatus.OK
             (responseCategoryDto.body() as CategoryOut).let {
                 it.id shouldBe categoryDto.id
@@ -59,7 +58,7 @@ class CategoryControllerTest(
     @Test
     fun `bad id`() {
         runBlocking {
-            categoryController.getCategory(UUID.randomUUID().toString()).status shouldBe HttpStatus.BAD_REQUEST
+            categoryController.getCategory("unknown").status shouldBe HttpStatus.BAD_REQUEST
         }
     }
 }

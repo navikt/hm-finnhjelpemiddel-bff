@@ -4,8 +4,8 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.swagger.v3.oas.annotations.tags.Tag
-import java.util.UUID
 import org.slf4j.LoggerFactory
+import java.util.UUID
 
 @Controller("/category")
 @Tag(name = "Categories")
@@ -17,8 +17,8 @@ class CategoryController(
     }
 
     @Get("/{category}")
-    suspend fun getCategory(category: String): HttpResponse<*> = try {
-        categoryRepository.findById(UUID.fromString(category))?.let { HttpResponse.ok(it.toOut()) }
+    fun getCategory(category: String): HttpResponse<*> = try {
+        categoryRepository.findByTitle(category)?.let { HttpResponse.ok(it.toOut()) }
             ?: HttpResponse.badRequest("No category with id $category")
     } catch (exception: Exception) {
         LOG.error("Error when getting category $category", exception)
