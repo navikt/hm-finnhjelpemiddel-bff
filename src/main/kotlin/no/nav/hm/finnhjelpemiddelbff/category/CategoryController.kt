@@ -4,8 +4,8 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.slf4j.LoggerFactory
 import java.util.UUID
+import org.slf4j.LoggerFactory
 
 @Controller("/category")
 @Tag(name = "Categories")
@@ -31,7 +31,7 @@ class CategoryController(
         subCategories =
             categoryRepository.findByIdInList(
                 data["subCategories"]?.map { UUID.fromString(it.asText()) }.orEmpty()
-            ).map { SubCategory(it.id, it.title) },
+            ).map { SubCategory(it.id, it.title, it.data["ikon"]?.asText().orEmpty()) },
         data = data
     )
 }

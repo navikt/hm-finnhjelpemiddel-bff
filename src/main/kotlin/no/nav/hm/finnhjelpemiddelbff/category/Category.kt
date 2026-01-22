@@ -36,4 +36,4 @@ data class CategoryOut(
 )
 
 @Serdeable
-data class SubCategory(val id: UUID, val title: String)
+data class SubCategory(val id: UUID, val title: String, val icon: String?)
