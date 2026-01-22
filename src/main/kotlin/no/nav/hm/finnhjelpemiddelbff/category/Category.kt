@@ -35,4 +35,5 @@ data class CategoryOut(
     val data: JsonNode
 )
 
+@Serdeable
 data class SubCategory(val id: UUID, val title: String)
