@@ -1,6 +1,6 @@
 {
-  "min_replicas": 1,
-  "max_replicas": 1,
+  "min_replicas": 2,
+  "max_replicas": 3,
   "cookie_domain": "finnhjelpemiddel.nav.no",
   "schedulers_enabled": true,
   "java_opts": "-Xms256m -Xmx2048m -XX:+UseG1GC",
