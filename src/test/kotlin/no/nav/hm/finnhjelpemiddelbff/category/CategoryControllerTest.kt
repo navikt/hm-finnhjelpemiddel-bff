@@ -91,7 +91,12 @@ class CategoryControllerTest(
             val responseCategoryWithData = categoryController.getCategory(categoryWithData.title)
 
             val subCategory =
-                SubCategory(categoryDto.id, categoryDto.title, categoryDto.data["icon"].asText().orEmpty())
+                SubCategory(
+                    categoryDto.id,
+                    categoryDto.title,
+                    categoryDto.data["icon"].asText().orEmpty(),
+                    categoryDto.data["description"].asText().orEmpty()
+                )
 
             responseCategoryWithData.status shouldBe HttpStatus.OK
             (responseCategoryWithData.body() as CategoryOut).let {
