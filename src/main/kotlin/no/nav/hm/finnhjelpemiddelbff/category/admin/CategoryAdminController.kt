@@ -39,7 +39,7 @@ class CategoryAdminController(
         authenticated(authorization) {
             try {
                 val category = runBlocking {
-                    categoryRepository.save(CategoryDto(title=newCategoryDto.title, data=newCategoryDto.data))
+                    categoryRepository.save(CategoryDto(title = newCategoryDto.title, data = newCategoryDto.data))
                 }
                 HttpResponse.ok(category.id.toString())
             } catch (exception: Exception) {
