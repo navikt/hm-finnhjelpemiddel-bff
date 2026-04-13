@@ -21,7 +21,7 @@ val kotestVersion = "5.9.1"
 val micrometerRegistryPrometheusVersion = "1.16.0"
 val grunndataDtoVersion = "202511170912"
 val hmLeaderElectionVersion = "202506021230"
-val log4jVersion = "2.25.3"
+val log4jVersion = "2.25.4"
 val mockkVersion = "1.14.2"
 
 dependencies {
