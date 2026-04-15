@@ -53,7 +53,7 @@ class CategoryControllerTest(
                 it.subCategories shouldBe emptyList()
             }
 
-            val responseCategoryList = categoryController.getCategories(listOf(categoryDto.title, categoryWithSubcategory.title))
+            val responseCategoryList = categoryController.getCategories(listOf(categoryDto.id, categoryWithSubcategory.id))
             responseCategoryList.status shouldBe HttpStatus.OK
             (responseCategoryList.body() as List<*>).size shouldBe 2
         }
