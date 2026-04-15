@@ -28,9 +28,9 @@ class CategoryController(
         HttpResponse.serverError(exception.message)
     }
 
-    @Post("/ids")
-    fun getCategories( @Body categories: List<UUID>): HttpResponse<*> = try {
-        HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut() } })
+    @Post("/list")
+    fun getCategories( @Body categories: List<String>): HttpResponse<*> = try {
+        HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findByTitle(it)?.toOut() } })
     } catch (exception: Exception) {
         LOG.error("Error when getting categories $categories", exception)
         HttpResponse.serverError(exception.message)
