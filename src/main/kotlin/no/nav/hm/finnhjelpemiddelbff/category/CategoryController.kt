@@ -1,9 +1,12 @@
 package no.nav.hm.finnhjelpemiddelbff.category
 
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Post
 import io.swagger.v3.oas.annotations.tags.Tag
+import kotlinx.coroutines.runBlocking
 import java.util.UUID
 import org.slf4j.LoggerFactory
 
@@ -22,6 +25,14 @@ class CategoryController(
             ?: HttpResponse.badRequest("No category with id $category")
     } catch (exception: Exception) {
         LOG.error("Error when getting category $category", exception)
+        HttpResponse.serverError(exception.message)
+    }
+
+    @Post("/ids")
+    fun getCategories( @Body categories: List<UUID>): HttpResponse<*> = try {
+        HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut() } })
+    } catch (exception: Exception) {
+        LOG.error("Error when getting categories $categories", exception)
         HttpResponse.serverError(exception.message)
     }
 
