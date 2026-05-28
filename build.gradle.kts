@@ -1,5 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -61,7 +62,6 @@ dependencies {
 
     implementation("com.github.navikt:hm-micronaut-leaderelection:$hmLeaderElectionVersion")
 
-    testImplementation("io.micronaut:micronaut-http-client")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:postgresql")
@@ -83,11 +83,11 @@ java {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = jvmTarget
+    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(jvmTarget))
 }
 
 tasks.named<KotlinCompile>("compileTestKotlin") {
-    kotlinOptions.jvmTarget = jvmTarget
+    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(jvmTarget))
 }
 
 tasks.named<ShadowJar>("shadowJar") {
