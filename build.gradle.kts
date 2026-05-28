@@ -23,6 +23,7 @@ val grunndataDtoVersion = "202511170912"
 val hmLeaderElectionVersion = "202506021230"
 val log4jVersion = "2.25.4"
 val mockkVersion = "1.14.2"
+val postgresVersion = "42.7.11"
 
 dependencies {
     kapt("io.micronaut.data:micronaut-data-processor")
@@ -37,7 +38,7 @@ dependencies {
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
-    runtimeOnly("org.postgresql:postgresql")
+    runtimeOnly("org.postgresql:postgresql:${postgresVersion}")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
