@@ -7,7 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.21"
     id("org.jetbrains.kotlin.kapt") version "2.1.21"
     id("org.jetbrains.kotlin.plugin.allopen") version "2.1.21"
-    id("com.gradleup.shadow") version "8.3.9"
+    id("com.gradleup.shadow") version "9.4.1"
     id("io.micronaut.application") version "4.6.2"
     id("io.micronaut.aot") version "4.6.1"
 }
@@ -27,6 +27,10 @@ val mockkVersion = "1.14.2"
 val postgresVersion = "42.7.11"
 
 dependencies {
+    constraints {
+        implementation("org.codehaus.plexus:plexus-utils:4.0.3")
+        implementation("org.apache.logging.log4j:log4j-core:2.25.4")
+    }
     kapt("io.micronaut.data:micronaut-data-processor")
     kapt("io.micronaut:micronaut-http-validation")
     kapt("io.micronaut.openapi:micronaut-openapi")
