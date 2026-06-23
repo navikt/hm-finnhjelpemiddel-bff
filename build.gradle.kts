@@ -13,9 +13,9 @@ plugins {
 }
 
 group = "no.nav.hm"
-version = providers.gradleProperty("version").orElse("local-build")
+version = providers.gradleProperty("version").getOrElse("local-build")
 
-val kotlinVersion = providers.gradleProperty("kotlinVersion")
+val kotlinVersion = providers.gradleProperty("kotlinVersion").get()
 val poiVersion = "5.5.0"
 val jvmTarget = "25"
 val kotestVersion = "5.9.1"
