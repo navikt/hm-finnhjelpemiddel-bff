@@ -62,7 +62,7 @@ class SeriesControllerTest(private val seriesController: SeriesController) {
     fun `series with single variant`() {
         runBlocking {
             val response = seriesController.getSeries("aaa")
-            response.body().id shouldBe "seriesIdTest"
+            response.body()?.id shouldBe "seriesIdTest"
         }
     }
 }

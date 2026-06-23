@@ -1,6 +1,6 @@
 package no.nav.hm.finnhjelpemiddelbff.category
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
@@ -98,8 +98,8 @@ class CategoryControllerTest(
                 SubCategory(
                     categoryDto.id,
                     categoryDto.title,
-                    categoryDto.data["icon"].asText().orEmpty(),
-                    categoryDto.data["description"].asText().orEmpty()
+                    categoryDto.data["icon"].asString().orEmpty(),
+                    categoryDto.data["description"].asString().orEmpty()
                 )
 
             responseCategoryWithData.status shouldBe HttpStatus.OK
@@ -107,9 +107,9 @@ class CategoryControllerTest(
                 it.id shouldBe categoryWithData.id
                 it.title shouldBe categoryWithData.title
                 it.subCategories shouldBe arrayListOf(subCategory)
-                it.data["description"].asText() shouldBe dataDescription
-                it.data["subCategories"].get(0).asText() shouldBe dataSubCategories
-                it.data["icon"].asText() shouldBe dataIcon
+                it.data["description"].asString() shouldBe dataDescription
+                it.data["subCategories"].get(0).asString() shouldBe dataSubCategories
+                it.data["icon"].asString() shouldBe dataIcon
             }
         }
     }

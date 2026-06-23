@@ -15,7 +15,7 @@ class SeriesController(
     suspend fun getSeries(seriesId: String): HttpResponse<Series> {
         return searchService.getSeries(seriesId).let {
             HttpResponse.ok(it)
-        } ?: HttpResponse.notFound()
+        }
     }
 }
 

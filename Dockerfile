@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/java17-debian12:nonroot
+FROM gcr.io/distroless/java25-debian13:nonroot
 WORKDIR /app
 ENV TZ="Europe/Oslo"
 EXPOSE 8080

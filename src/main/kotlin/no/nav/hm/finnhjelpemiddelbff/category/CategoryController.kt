@@ -25,7 +25,7 @@ class CategoryController(
             ?: HttpResponse.badRequest("No category with id $category")
     } catch (exception: Exception) {
         LOG.error("Error when getting category $category", exception)
-        HttpResponse.serverError(exception.message)
+        HttpResponse.serverError(exception.message!!)
     }
 
     @Post("/ids")
@@ -33,7 +33,7 @@ class CategoryController(
         HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut() } })
     } catch (exception: Exception) {
         LOG.error("Error when getting categories $categories", exception)
-        HttpResponse.serverError(exception.message)
+        HttpResponse.serverError(exception.message!!)
     }
 
     private fun CategoryDto.toOut(): CategoryOut = CategoryOut(
@@ -41,13 +41,13 @@ class CategoryController(
         title = title,
         subCategories =
             categoryRepository.findByIdInList(
-                data["subCategories"]?.map { UUID.fromString(it.asText()) }.orEmpty()
+                data["subCategories"]?.toList()?.map {  UUID.fromString(it.asString()) }.orEmpty()
             ).map {
                 SubCategory(
                     it.id,
                     it.title,
-                    it.data["icon"]?.asText().orEmpty(),
-                    it.data["description"]?.asText().orEmpty()
+                    it.data["icon"]?.asString().orEmpty(),
+                    it.data["description"]?.asString().orEmpty()
                 )
             },
         data = data

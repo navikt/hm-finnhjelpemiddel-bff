@@ -1,6 +1,6 @@
 package no.nav.hm.finnhjelpemiddelbff.category.admin
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -51,7 +51,7 @@ class CategoryAdminControllerTest(
             createCategoryResponse.status shouldBe HttpStatus.OK
             val categoryId = createCategoryResponse.body()
 
-            categoryAdminController.getCategoryById(categoryId)
+            categoryAdminController.getCategoryById(categoryId!!)
                 .shouldNotBeNull()
                 .data.shouldBe(categoryDto.data)
 
