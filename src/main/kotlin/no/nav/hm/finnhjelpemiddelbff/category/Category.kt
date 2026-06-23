@@ -1,6 +1,5 @@
 package no.nav.hm.finnhjelpemiddelbff.category
 
-import tools.jackson.databind.JsonNode
 import io.micronaut.data.annotation.Id
 import io.micronaut.data.annotation.MappedEntity
 import io.micronaut.data.annotation.TypeDef
@@ -8,6 +7,7 @@ import io.micronaut.data.model.DataType
 import io.micronaut.serde.annotation.Serdeable
 import java.time.LocalDateTime
 import java.util.UUID
+import tools.jackson.databind.JsonNode
 
 @Serdeable
 @MappedEntity("category")

@@ -5,12 +5,11 @@ import io.micronaut.http.annotation.Post
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.serde.annotation.SerdeImport
 import io.micronaut.serde.annotation.Serdeable
+import java.time.LocalDateTime
+import java.util.UUID
 import no.nav.hm.grunndata.rapid.dto.MediaType
 import no.nav.hm.grunndata.rapid.dto.ProductStatus
 import no.nav.hm.grunndata.rapid.dto.TechData
-import java.time.LocalDateTime
-import java.util.UUID
-
 
 
 @SerdeImport(

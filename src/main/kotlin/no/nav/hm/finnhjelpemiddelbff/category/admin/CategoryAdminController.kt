@@ -9,6 +9,7 @@ import io.micronaut.http.annotation.Header
 import io.micronaut.http.annotation.Post
 import io.micronaut.http.annotation.Put
 import io.swagger.v3.oas.annotations.tags.Tag
+import java.util.UUID
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.finnhjelpemiddelbff.auth.AuthBody
@@ -17,7 +18,6 @@ import no.nav.hm.finnhjelpemiddelbff.category.CategoryDto
 import no.nav.hm.finnhjelpemiddelbff.category.CategoryRepository
 import no.nav.hm.finnhjelpemiddelbff.category.CreateCategoryDto
 import org.slf4j.LoggerFactory
-import java.util.UUID
 
 
 @Controller("/admin/category")

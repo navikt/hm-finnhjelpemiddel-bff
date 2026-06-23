@@ -6,8 +6,8 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.swagger.v3.oas.annotations.tags.Tag
-import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
 @Controller("/category")
@@ -29,7 +29,7 @@ class CategoryController(
     }
 
     @Post("/ids")
-    fun getCategories( @Body categories: List<UUID>): HttpResponse<*> = try {
+    fun getCategories(@Body categories: List<UUID>): HttpResponse<*> = try {
         HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut() } })
     } catch (exception: Exception) {
         LOG.error("Error when getting categories $categories", exception)
@@ -41,7 +41,7 @@ class CategoryController(
         title = title,
         subCategories =
             categoryRepository.findByIdInList(
-                data["subCategories"]?.toList()?.map {  UUID.fromString(it.asString()) }.orEmpty()
+                data["subCategories"]?.toList()?.map { UUID.fromString(it.asString()) }.orEmpty()
             ).map {
                 SubCategory(
                     it.id,
