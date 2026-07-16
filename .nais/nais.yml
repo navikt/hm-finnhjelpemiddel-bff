@@ -55,6 +55,7 @@ spec:
     inbound:
       rules:
         - application: hm-oversikt-frontend
+        - application: hm-finnhjelpemiddel
         - application: azure-token-generator
           namespace: nais
           cluster: dev-gcp
