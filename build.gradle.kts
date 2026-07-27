@@ -14,7 +14,8 @@ plugins {
 
 group = "no.nav.hm"
 
-val kotlinVersion = providers.gradleProperty("kotlinVersion").get()
+val micronautVersion="5.0.6"
+val kotlinVersion="2.3.21"
 val poiVersion = "5.5.0"
 val jvmTarget = "25"
 val kotestVersion = "5.9.1"
@@ -107,6 +108,7 @@ tasks.test {
 }
 
 micronaut {
+    version.set(micronautVersion)
     runtime("netty")
     testRuntime("junit5")
     processing {
