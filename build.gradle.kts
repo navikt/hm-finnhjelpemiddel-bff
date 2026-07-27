@@ -8,8 +8,8 @@ plugins {
     kotlin("kapt") version "2.3.21"
     kotlin("plugin.allopen") version "2.3.21"
     id("com.gradleup.shadow") version "9.4.1"
-    id("io.micronaut.application") version "5.0.0"
-    id("io.micronaut.aot") version "5.0.0"
+    id("io.micronaut.application") version "5.0.2"
+    id("io.micronaut.aot") version "5.0.2"
 }
 
 group = "no.nav.hm"
