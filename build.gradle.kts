@@ -5,11 +5,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "2.3.21"
-    kotlin("kapt") version "2.3.21"
     kotlin("plugin.allopen") version "2.3.21"
     id("com.gradleup.shadow") version "9.4.1"
     id("io.micronaut.application") version "5.0.2"
     id("io.micronaut.aot") version "5.0.2"
+    id("com.google.devtools.ksp") version "2.3.10"
 }
 
 group = "no.nav.hm"
@@ -31,10 +31,10 @@ dependencies {
         implementation("org.codehaus.plexus:plexus-utils:4.0.3")
         implementation("org.apache.logging.log4j:log4j-core:2.25.4")
     }
-    kapt("io.micronaut.data:micronaut-data-processor")
-    kapt("io.micronaut:micronaut-http-validation")
-    kapt("io.micronaut.openapi:micronaut-openapi")
-    kapt("io.micronaut.serde:micronaut-serde-processor")
+    ksp("io.micronaut.data:micronaut-data-processor")
+    ksp("io.micronaut:micronaut-http-validation")
+    ksp("io.micronaut.openapi:micronaut-openapi")
+    ksp("io.micronaut.serde:micronaut-serde-processor")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
 
