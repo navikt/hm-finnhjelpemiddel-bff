@@ -6,7 +6,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "2.3.21"
     kotlin("plugin.allopen") version "2.3.21"
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.6.1"
     id("io.micronaut.application") version "5.0.2"
     id("io.micronaut.aot") version "5.0.2"
     id("com.google.devtools.ksp") version "2.3.10"
@@ -14,8 +14,7 @@ plugins {
 
 group = "no.nav.hm"
 
-val micronautVersion="5.0.6"
-val kotlinVersion="2.3.21"
+val micronautVersion = "5.0.6"
 val poiVersion = "5.5.0"
 val jvmTarget = "25"
 val kotestVersion = "5.9.1"
@@ -44,8 +43,7 @@ dependencies {
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.postgresql:postgresql:${postgresVersion}")
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
     implementation("org.apache.poi:poi:$poiVersion")
@@ -70,7 +68,7 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
-    
+
 }
 
 
