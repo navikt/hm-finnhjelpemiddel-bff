@@ -17,19 +17,15 @@ group = "no.nav.hm"
 val micronautVersion = "5.0.6"
 val poiVersion = "5.5.0"
 val jvmTarget = "25"
-val kotestVersion = "5.9.1"
-val micrometerRegistryPrometheusVersion = "1.16.0"
 val grunndataDtoVersion = "202511170912"
 val hmLeaderElectionVersion = "202506021230"
-val log4jVersion = "2.25.4"
-val mockkVersion = "1.14.2"
 val postgresVersion = "42.7.12"
 
 dependencies {
     constraints {
         implementation("org.codehaus.plexus:plexus-utils:4.0.3")
-        implementation("org.apache.logging.log4j:log4j-core:2.25.4")
     }
+
     ksp("io.micronaut.data:micronaut-data-processor")
     ksp("io.micronaut:micronaut-http-validation")
     ksp("io.micronaut.openapi:micronaut-openapi")
@@ -53,8 +49,6 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
 
-    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
-
     implementation("io.micronaut.micrometer:micronaut-micrometer-core")
     implementation("io.micronaut.micrometer:micronaut-micrometer-registry-prometheus")
     implementation("io.micronaut:micronaut-management")
@@ -66,8 +60,8 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:testcontainers-postgresql")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.kotest:kotest-assertions-core-jvm")
+    testImplementation("io.mockk:mockk")
 
 }
 
