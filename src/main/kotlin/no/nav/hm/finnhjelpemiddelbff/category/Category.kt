@@ -11,13 +11,21 @@ import tools.jackson.databind.JsonNode
 
 @Serdeable
 @MappedEntity("category")
-data class CategoryDto(
+data class Category(
     @field:Id
     val id: UUID = UUID.randomUUID(),
     val title: String,
     @field:TypeDef(type = DataType.JSON)
     val data: JsonNode,
-    val created: LocalDateTime = LocalDateTime.now()
+    val created: LocalDateTime = LocalDateTime.now(),
+    @field:TypeDef(type = DataType.JSON)
+    val subcategories: List<Subcategory> = emptyList()
+)
+
+@Serdeable
+data class Subcategory(
+    val id: UUID,
+    val priority: Int,
 )
 
 @Serdeable
@@ -31,9 +39,9 @@ data class CreateCategoryDto(
 data class CategoryOut(
     val id: UUID? = UUID.randomUUID(),
     val title: String,
-    val subCategories: List<SubCategory>,
+    val subCategories: List<SubcategoryResponse>,
     val data: JsonNode
 )
 
 @Serdeable
-data class SubCategory(val id: UUID, val title: String, val icon: String?, val description: String?)
+data class SubcategoryResponse(val id: UUID, val title: String, val icon: String?, val description: String?, val priority: Int? = 0)

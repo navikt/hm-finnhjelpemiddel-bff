@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.finnhjelpemiddelbff.auth.AuthBody
 import no.nav.hm.finnhjelpemiddelbff.auth.AzureAdUserClient
-import no.nav.hm.finnhjelpemiddelbff.category.CategoryDto
+import no.nav.hm.finnhjelpemiddelbff.category.Category
 import no.nav.hm.finnhjelpemiddelbff.category.CategoryRepository
 import no.nav.hm.finnhjelpemiddelbff.category.CreateCategoryDto
 import org.slf4j.LoggerFactory
@@ -39,7 +39,7 @@ class CategoryAdminController(
         authenticated(authorization) {
             try {
                 val category = runBlocking {
-                    categoryRepository.save(CategoryDto(title = newCategoryDto.title, data = newCategoryDto.data))
+                    categoryRepository.save(Category(title = newCategoryDto.title, data = newCategoryDto.data))
                 }
                 HttpResponse.ok(category.id.toString())
             } catch (exception: Exception) {
@@ -51,16 +51,16 @@ class CategoryAdminController(
     @Put("/")
     suspend fun updateCategory(
         @Header("Authorization") authorization: String,
-        @Body categoryDto: CategoryDto
+        @Body category: Category
     ): HttpResponse<String> =
         authenticated(authorization) {
             try {
                 runBlocking {
-                    categoryRepository.update(categoryDto)
+                    categoryRepository.update(category)
                 }
                 HttpResponse.ok()
             } catch (exception: Exception) {
-                LOG.error("Failed to update category \"$categoryDto\"", exception)
+                LOG.error("Failed to update category \"$category\"", exception)
                 HttpResponse.serverError()
             }
 

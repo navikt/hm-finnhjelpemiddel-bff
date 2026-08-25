@@ -36,14 +36,14 @@ class CategoryController(
         HttpResponse.serverError(exception.message!!)
     }
 
-    private fun CategoryDto.toOut(): CategoryOut = CategoryOut(
+    private fun Category.toOut(): CategoryOut = CategoryOut(
         id = id,
         title = title,
         subCategories =
             categoryRepository.findByIdInList(
                 data["subCategories"]?.toList()?.map { UUID.fromString(it.asString()) }.orEmpty()
             ).map {
-                SubCategory(
+                SubcategoryResponse(
                     it.id,
                     it.title,
                     it.data["icon"]?.asString().orEmpty(),

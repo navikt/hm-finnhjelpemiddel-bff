@@ -24,18 +24,18 @@ class CategoryControllerTest(
             "description": "Dette er en kategori"
             }
         """.trimIndent()
-        val categoryDto = CategoryDto(title = "Kategori 1", data = objectMapper.readTree(data))
+        val category = Category(title = "Kategori 1", data = objectMapper.readTree(data))
 
         @Language("JSON") val data2 = """
             {
             "description": "Testert i testen",
-            "subCategories": ["${categoryDto.id}"]
+            "subCategories": ["${category.id}"]
             }
         """.trimIndent()
-        val categoryWithSubcategory = CategoryDto(title = "Kategori 2", data = objectMapper.readTree(data2))
+        val categoryWithSubcategory = Category(title = "Kategori 2", data = objectMapper.readTree(data2))
 
         runBlocking {
-            categoryRepository.saveAll(listOf(categoryDto, categoryWithSubcategory)).toList() shouldHaveSize 2
+            categoryRepository.saveAll(listOf(category, categoryWithSubcategory)).toList() shouldHaveSize 2
 
             val responseCategoryWithSubcategory = categoryController.getCategory(categoryWithSubcategory.title)
             responseCategoryWithSubcategory.status shouldBe HttpStatus.OK
@@ -45,15 +45,15 @@ class CategoryControllerTest(
                 it.subCategories shouldHaveSize 1
             }
 
-            val responseCategoryDto = categoryController.getCategory(categoryDto.title)
+            val responseCategoryDto = categoryController.getCategory(category.title)
             responseCategoryDto.status shouldBe HttpStatus.OK
             (responseCategoryDto.body() as CategoryOut).let {
-                it.id shouldBe categoryDto.id
-                it.title shouldBe categoryDto.title
+                it.id shouldBe category.id
+                it.title shouldBe category.title
                 it.subCategories shouldBe emptyList()
             }
 
-            val responseCategoryList = categoryController.getCategories(listOf(categoryDto.id, categoryWithSubcategory.id))
+            val responseCategoryList = categoryController.getCategories(listOf(category.id, categoryWithSubcategory.id))
             responseCategoryList.status shouldBe HttpStatus.OK
             (responseCategoryList.body() as List<*>).size shouldBe 2
         }
@@ -74,10 +74,10 @@ class CategoryControllerTest(
             "icon": "<svg></svg>"
             }
         """.trimIndent()
-        val categoryDto = CategoryDto(title = "Kategori 1", data = objectMapper.readTree(dataSub))
+        val category = Category(title = "Kategori 1", data = objectMapper.readTree(dataSub))
 
         val dataDescription = "Testert i testen"
-        val dataSubCategories = "${categoryDto.id}"
+        val dataSubCategories = "${category.id}"
         val dataIcon = "<svg></svg>"
 
         @Language("JSON") val data = """
@@ -87,19 +87,21 @@ class CategoryControllerTest(
             "icon": "$dataIcon"
             }
         """.trimIndent()
-        val categoryWithData = CategoryDto(title = "Kategori 2", data = objectMapper.readTree(data))
+        val categoryWithData = Category(title = "Kategori 2", data = objectMapper.readTree(data), subcategories = listOf(
+            Subcategory(id=category.id, priority = 1)
+        ))
 
         runBlocking {
-            categoryRepository.saveAll(listOf(categoryDto, categoryWithData)).toList() shouldHaveSize 2
+            categoryRepository.saveAll(listOf(category, categoryWithData)).toList() shouldHaveSize 2
 
             val responseCategoryWithData = categoryController.getCategory(categoryWithData.title)
 
             val subCategory =
-                SubCategory(
-                    categoryDto.id,
-                    categoryDto.title,
-                    categoryDto.data["icon"].asString().orEmpty(),
-                    categoryDto.data["description"].asString().orEmpty()
+                SubcategoryResponse(
+                    category.id,
+                    category.title,
+                    category.data["icon"].asString().orEmpty(),
+                    category.data["description"].asString().orEmpty()
                 )
 
             responseCategoryWithData.status shouldBe HttpStatus.OK
