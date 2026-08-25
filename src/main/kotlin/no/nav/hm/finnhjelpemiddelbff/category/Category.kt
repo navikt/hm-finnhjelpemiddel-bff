@@ -19,7 +19,7 @@ data class Category(
     val data: JsonNode,
     val created: LocalDateTime = LocalDateTime.now(),
     @field:TypeDef(type = DataType.JSON)
-    val subcategories: List<Subcategory> = emptyList()
+    val subcategories: List<Subcategory>? = emptyList()
 )
 
 @Serdeable
