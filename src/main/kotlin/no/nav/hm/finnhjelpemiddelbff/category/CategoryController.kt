@@ -39,17 +39,21 @@ class CategoryController(
     private fun Category.toOut(): CategoryOut = CategoryOut(
         id = id,
         title = title,
-        subCategories =
-            categoryRepository.findByIdInList(
-                data["subCategories"]?.toList()?.map { UUID.fromString(it.asString()) }.orEmpty()
-            ).map {
-                SubcategoryResponse(
-                    it.id,
-                    it.title,
-                    it.data["icon"]?.asString().orEmpty(),
-                    it.data["description"]?.asString().orEmpty()
-                )
-            },
+        subCategories = subcategories?.let { subcategories ->
+            val categories = categoryRepository.findByIdInList(
+                subcategories.map { it.id }
+            )
+            val priorities = subcategories.associateBy { it.id }
+
+            categories.map { SubcategoryResponse(
+                id = it.id,
+                title = it.title,
+                icon = it.data["icon"]?.asString().orEmpty(),
+                description = it.data["description"]?.asString().orEmpty(),
+                priority = priorities[it.id]?.priority
+            ) }
+
+        }.orEmpty(),
         data = data
     )
 }

@@ -28,11 +28,11 @@ class CategoryControllerTest(
 
         @Language("JSON") val data2 = """
             {
-            "description": "Testert i testen",
-            "subCategories": ["${category.id}"]
+            "description": "Testert i testen"
             }
         """.trimIndent()
-        val categoryWithSubcategory = Category(title = "Kategori 2", data = objectMapper.readTree(data2))
+        val categoryWithSubcategory = Category(title = "Kategori 2", data = objectMapper.readTree(data2), subcategories = listOf(
+            Subcategory(category.id, 0)))
 
         runBlocking {
             categoryRepository.saveAll(listOf(category, categoryWithSubcategory)).toList() shouldHaveSize 2
@@ -83,7 +83,6 @@ class CategoryControllerTest(
         @Language("JSON") val data = """
             {
             "description": "$dataDescription",
-            "subCategories": ["$dataSubCategories"],
             "icon": "$dataIcon"
             }
         """.trimIndent()
@@ -101,7 +100,8 @@ class CategoryControllerTest(
                     category.id,
                     category.title,
                     category.data["icon"].asString().orEmpty(),
-                    category.data["description"].asString().orEmpty()
+                    category.data["description"].asString().orEmpty(),
+                    priority = 1
                 )
 
             responseCategoryWithData.status shouldBe HttpStatus.OK
@@ -110,7 +110,6 @@ class CategoryControllerTest(
                 it.title shouldBe categoryWithData.title
                 it.subCategories shouldBe arrayListOf(subCategory)
                 it.data["description"].asString() shouldBe dataDescription
-                it.data["subCategories"].get(0).asString() shouldBe dataSubCategories
                 it.data["icon"].asString() shouldBe dataIcon
             }
         }
