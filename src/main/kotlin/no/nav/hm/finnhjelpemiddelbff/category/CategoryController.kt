@@ -48,8 +48,8 @@ class CategoryController(
             categories.map { SubcategoryResponse(
                 id = it.id,
                 title = it.title,
-                icon = it.data["icon"]?.asString().orEmpty(),
-                description = it.data["description"]?.asString().orEmpty(),
+                icon = it.data.icon,
+                description = it.data.description,
                 priority = priorities[it.id]?.priority
             ) }
 

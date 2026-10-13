@@ -1,37 +1,24 @@
 package no.nav.hm.finnhjelpemiddelbff.category
 
-import tools.jackson.databind.ObjectMapper
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 @MicronautTest
 class CategoryControllerTest(
     private val categoryController: CategoryController,
     private val categoryRepository: CategoryRepository,
-    private val objectMapper: ObjectMapper
 ) {
 
     @Test
     fun `happy path`() {
-        @Language("JSON") val data = """
-            {
-            "description": "Dette er en kategori"
-            }
-        """.trimIndent()
-        val category = Category(title = "Kategori 1", data = objectMapper.readTree(data))
+        val category = Category(title = "Kategori 1", data = CategoryData(description = "Dette er en kategori"))
 
-        @Language("JSON") val data2 = """
-            {
-            "description": "Testert i testen"
-            }
-        """.trimIndent()
-        val categoryWithSubcategory = Category(title = "Kategori 2", data = objectMapper.readTree(data2), subcategories = listOf(
+        val categoryWithSubcategory = Category(title = "Kategori 2", data = CategoryData("Testert i testen"), subcategories = listOf(
             Subcategory(category.id, 0)))
 
         runBlocking {
@@ -68,25 +55,13 @@ class CategoryControllerTest(
 
     @Test
     fun `data content`() {
-        @Language("JSON") val dataSub = """
-            {
-            "description": "Dette er en kategori",
-            "icon": "<svg></svg>"
-            }
-        """.trimIndent()
-        val category = Category(title = "Kategori 1", data = objectMapper.readTree(dataSub))
+        val category = Category(title = "Kategori 1", data = CategoryData(description = "Dette er en kategori",  icon="<svg></svg>"))
 
         val dataDescription = "Testert i testen"
-        val dataSubCategories = "${category.id}"
         val dataIcon = "<svg></svg>"
 
-        @Language("JSON") val data = """
-            {
-            "description": "$dataDescription",
-            "icon": "$dataIcon"
-            }
-        """.trimIndent()
-        val categoryWithData = Category(title = "Kategori 2", data = objectMapper.readTree(data), subcategories = listOf(
+
+        val categoryWithData = Category(title = "Kategori 2", data = CategoryData(description = dataDescription, icon=dataIcon), subcategories = listOf(
             Subcategory(id=category.id, priority = 1)
         ))
 
@@ -99,8 +74,8 @@ class CategoryControllerTest(
                 SubcategoryResponse(
                     category.id,
                     category.title,
-                    category.data["icon"].asString().orEmpty(),
-                    category.data["description"].asString().orEmpty(),
+                    category.data.icon,
+                    category.data.description,
                     priority = 1
                 )
 
@@ -109,8 +84,8 @@ class CategoryControllerTest(
                 it.id shouldBe categoryWithData.id
                 it.title shouldBe categoryWithData.title
                 it.subCategories shouldBe arrayListOf(subCategory)
-                it.data["description"].asString() shouldBe dataDescription
-                it.data["icon"].asString() shouldBe dataIcon
+                it.data.description shouldBe dataDescription
+                it.data.icon shouldBe dataIcon
             }
         }
     }

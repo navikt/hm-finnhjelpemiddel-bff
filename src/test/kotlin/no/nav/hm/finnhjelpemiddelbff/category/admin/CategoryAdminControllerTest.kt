@@ -1,6 +1,5 @@
 package no.nav.hm.finnhjelpemiddelbff.category.admin
 
-import tools.jackson.databind.ObjectMapper
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.collections.shouldNotBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -14,14 +13,13 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import no.nav.hm.finnhjelpemiddelbff.auth.AuthResponse
 import no.nav.hm.finnhjelpemiddelbff.auth.AzureAdUserClient
+import no.nav.hm.finnhjelpemiddelbff.category.CategoryData
 import no.nav.hm.finnhjelpemiddelbff.category.CreateCategoryDto
-import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Test
 
 @MicronautTest
 class CategoryAdminControllerTest(
     private val categoryAdminController: CategoryAdminController,
-    private val objectMapper: ObjectMapper
 ) {
 
     @MockBean(AzureAdUserClient::class)
@@ -35,13 +33,8 @@ class CategoryAdminControllerTest(
 
     @Test
     fun createCategory() {
-        @Language("JSON") val data = """
-            {
-            "description": "Dette er en kategori"
-            }
-        """.trimIndent()
 
-        val categoryDto = CreateCategoryDto(title="Kategori", data = objectMapper.readTree(data))
+        val categoryDto = CreateCategoryDto(title="Kategori", data = CategoryData(description = "Dette er en kategori"))
 
         runBlocking {
             val createCategoryResponse = categoryAdminController.createCategory(
@@ -63,17 +56,11 @@ class CategoryAdminControllerTest(
 
 
     @Test
-    fun requireName() {
-        @Language("JSON") val dataBlankName = """
-            {
-            "description": "Dette er en kategori"
-            }
-        """.trimIndent()
-
+    fun requireTitle() {
         runBlocking {
             categoryAdminController.createCategory(
                 authorization = "auth",
-                newCategoryDto = CreateCategoryDto(title="", data = objectMapper.readTree(dataBlankName))
+                newCategoryDto = CreateCategoryDto(title="", data = CategoryData(description = "Dette er en kategori"))
             ).status shouldNotBe HttpStatus.OK
         }
     }

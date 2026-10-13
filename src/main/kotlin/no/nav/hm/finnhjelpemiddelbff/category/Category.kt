@@ -7,7 +7,6 @@ import io.micronaut.data.model.DataType
 import io.micronaut.serde.annotation.Serdeable
 import java.time.LocalDateTime
 import java.util.UUID
-import tools.jackson.databind.JsonNode
 
 @Serdeable
 @MappedEntity("category")
@@ -16,10 +15,20 @@ data class Category(
     val id: UUID = UUID.randomUUID(),
     val title: String,
     @field:TypeDef(type = DataType.JSON)
-    val data: JsonNode,
+    val data: CategoryData,
     val created: LocalDateTime = LocalDateTime.now(),
     @field:TypeDef(type = DataType.JSON)
     val subcategories: List<Subcategory>? = emptyList()
+)
+
+@Serdeable
+data class CategoryData(
+    val description: String? = null,
+    val isos: List<String>? = null,
+    val isos22: List<String>? = null,
+    val filters: List<String>? = null,
+    val icon: String? = null,
+    val showSubCategoryIcons: Boolean? = null
 )
 
 @Serdeable
@@ -32,7 +41,7 @@ data class Subcategory(
 data class CreateCategoryDto(
     val title: String,
     @field:TypeDef(type = DataType.JSON)
-    val data: JsonNode,
+    val data: CategoryData,
 )
 
 @Serdeable
@@ -40,7 +49,7 @@ data class CategoryOut(
     val id: UUID? = UUID.randomUUID(),
     val title: String,
     val subCategories: List<SubcategoryResponse>,
-    val data: JsonNode
+    val data: CategoryData
 )
 
 @Serdeable
