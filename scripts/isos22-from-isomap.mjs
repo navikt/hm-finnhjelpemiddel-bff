@@ -124,7 +124,9 @@ const statements = results
       `-- ${category.title.replaceAll(/[\r\n]/g, ' ')}`,
       'DO $isos22$ BEGIN',
       `  UPDATE category SET data = jsonb_set(data, '{isos22}', ${sqlString(JSON.stringify(isos22))}::jsonb)`,
-      `    WHERE id = ${id} AND data->'isos22' ${stored};`,
+      // NULLIF treats a stored JSON null like a missing key. The isos check aborts if the v16 source changed.
+      `    WHERE id = ${id} AND NULLIF(data->'isos22', 'null'::jsonb) ${stored}`,
+      `      AND data->'isos' = ${sqlString(JSON.stringify(category.data.isos))}::jsonb;`,
       `  IF NOT FOUND THEN RAISE EXCEPTION 'Category % was changed after export or is missing', ${id}; END IF;`,
       'END $isos22$;',
     ].join('\n')

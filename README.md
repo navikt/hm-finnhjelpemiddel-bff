@@ -57,10 +57,10 @@ v16 prefixes, foreign v16 codes, a `status` and an `action`.
 | `unverified` | At least one matching isomap row is not verified |
 | `partly unmapped` / `not mapped` | Some or all v16 prefixes are missing from the isomap |
 
-`action` is `update`, `skip: status`, `skip: up to date` or `skip: manual` (current `isos22` is set and differs).
+`action` is `update`, `skip: status`, `skip: up to date` or `skip: manual` (current `isos22` is non-empty and differs; an empty `[]` is treated as not set).
 
 `scripts/isos22-out/isos22-update.sql` contains one `DO` block per `update`. Each block stops with an error, and the
-transaction rolls back, if the category was changed after `cats.json` was exported. Run it in dev first:
+transaction rolls back, if `isos` or `isos22` of the category was changed after `cats.json` was exported. Run it in dev first:
 
 ```
 psql -v ON_ERROR_STOP=1 -f scripts/isos22-out/isos22-update.sql

@@ -3,6 +3,8 @@ name: hm-finnhjelpemiddel-bff-local
 services:
   bff:
     build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "127.0.0.1:8083:8083"
     environment:
