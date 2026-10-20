@@ -89,4 +89,32 @@ class CategoryControllerTest(
             }
         }
     }
+
+    @Test
+    fun `isoVersion 22 returns isos22 as isos`() {
+        val category = Category(
+            title = "Versjonert",
+            data = CategoryData(isos = listOf("1234"), isos22 = listOf("5678"), filters = listOf("Bredde"))
+        )
+        val withoutV22 = Category(title = "Uten v22", data = CategoryData(isos = listOf("1234")))
+
+        runBlocking {
+            categoryRepository.saveAll(listOf(category, withoutV22)).toList() shouldHaveSize 2
+
+            (categoryController.getCategory(category.title).body() as CategoryOut).let {
+                it.isoVersion shouldBe 16
+                it.data.isos shouldBe listOf("1234")
+            }
+            (categoryController.getCategory(category.title, 22).body() as CategoryOut).let {
+                it.isoVersion shouldBe 22
+                it.data.isos shouldBe listOf("5678")
+                it.data.filters shouldBe listOf("Bredde")
+            }
+            (categoryController.getCategories(listOf(withoutV22.id), 22).body() as List<*>)
+                .map { (it as CategoryOut).data.isos } shouldBe listOf(emptyList<String>())
+
+            categoryController.getCategory(category.title, 99).status shouldBe HttpStatus.BAD_REQUEST
+            categoryController.getCategories(listOf(category.id), 99).status shouldBe HttpStatus.BAD_REQUEST
+        }
+    }
 }
