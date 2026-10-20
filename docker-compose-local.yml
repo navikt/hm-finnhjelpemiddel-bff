@@ -12,7 +12,7 @@ services:
       DB_USERNAME: finnhjelpemiddelbff
       DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD before starting Compose}
       SEARCH_URL: ${SEARCH_URL:-http://host.docker.internal:8080/products/_search}
-      GRUNNDATA_DB_URL: ${GRUNNDATA_DB_URL:-http://host.docker.internal:8080/import}
+      GRUNNDATA_DB_URL: ${GRUNNDATA_DB_URL:-https://finnhjelpemiddel-api.nav.no/import}
     depends_on:
       postgres:
         condition: service_healthy

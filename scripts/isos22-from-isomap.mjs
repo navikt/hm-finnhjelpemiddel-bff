@@ -2,30 +2,37 @@
 // Derives data.isos22 for BFF categories from the verified ISO 2016 -> 2022 map in hm-grunndata-register.
 // Read-only: writes a review CSV and a reviewable SQL file. Nothing is applied to any database.
 //
-//   node scripts/isos22-from-isomap.mjs --isomap <file|url> --categories <file|url> [--out out] [--include-review]
+//   node scripts/isos22-from-isomap.mjs [--isomap <file|url>] [--categories <file|url>] [--out <dir>]
+//                                       [--include-review] [--overwrite-manual]
 //
-// --isomap      JSON array from GET <register>/api/v22/isomap/
-// --categories  JSON array from GET <bff>/admin/category
-// --include-review  also write SQL for categories with split/merged/deleted codes (default: only clean mappings)
-import { readFile, mkdir, writeFile } from 'node:fs/promises'
+// --isomap            JSON array from GET <register>/api/v22/isomap/      (default scripts/isomap.json)
+// --categories        JSON array from GET <bff>/admin/category            (default scripts/cats.json)
+// --out               output directory                                    (default scripts/isos22-out)
+// --include-review    also write SQL for `review` categories (split, merged, deleted or shared v22 codes)
+// --overwrite-manual  also write SQL for categories whose current isos22 differs from the derived value
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
+
+const scriptDir = dirname(fileURLToPath(import.meta.url))
 
 const { values: args } = parseArgs({
   options: {
-    isomap: { type: 'string' },
-    categories: { type: 'string' },
-    out: { type: 'string', default: 'isos22-out' },
+    isomap: { type: 'string', default: join(scriptDir, 'isomap.json') },
+    categories: { type: 'string', default: join(scriptDir, 'cats.json') },
+    out: { type: 'string', default: join(scriptDir, 'isos22-out') },
     'include-review': { type: 'boolean', default: false },
+    'overwrite-manual': { type: 'boolean', default: false },
   },
 })
 
-if (!args.isomap || !args.categories) {
-  console.error('Usage: isos22-from-isomap.mjs --isomap <file|url> --categories <file|url> [--out dir] [--include-review]')
-  process.exit(2)
+const load = async (source) => {
+  if (!/^https?:\/\//.test(source)) return JSON.parse(await readFile(source, 'utf8'))
+  const response = await fetch(source)
+  if (!response.ok) throw new Error(`GET ${source} failed with HTTP ${response.status}`)
+  return response.json()
 }
-
-const load = async (source) =>
-  JSON.parse(/^https?:\/\//.test(source) ? await (await fetch(source)).text() : await readFile(source, 'utf8'))
 
 const ISO_CODE = /^(?:\d{2}){1,4}$/
 const CHANGING = new Set([
@@ -39,8 +46,10 @@ const CHANGING = new Set([
 const minimalPrefixes = (codes) =>
   [...new Set(codes)].sort().filter((code, i, all) => !all.slice(0, i).some((other) => code.startsWith(other)))
 
+const sameSet = (a, b) => a.length === b.length && [...a].sort().every((code, i) => code === [...b].sort()[i])
 const sqlString = (value) => `'${String(value).replaceAll("'", "''")}'`
-const csvCell = (value) => `"${String(value).replaceAll('"', '""')}"`
+// Leading = + - @ would be read as a formula by spreadsheet tools.
+const csvCell = (value) => `"${String(value).replace(/^([=+\-@])/, "'$1").replaceAll('"', '""')}"`
 
 const isomap = await load(args.isomap)
 const categories = await load(args.categories)
@@ -48,6 +57,7 @@ const rows = isomap.filter((row) => row.code16)
 
 const classify = (category) => {
   const isos = category.data?.isos ?? []
+  const current = category.data?.isos22 ?? []
   const codes22 = []
   const unmapped = []
   let unverified = false
@@ -67,18 +77,35 @@ const classify = (category) => {
   }
 
   const isos22 = minimalPrefixes(codes22)
-  const invalid = isos22.filter((code) => !ISO_CODE.test(code))
-  const unchanged = isos22.length === isos.length && isos22.every((code, i) => code === [...isos].sort()[i])
+
+  // Reverse check: a v22 prefix must not also cover v16 codes from outside this category,
+  // otherwise the v22 category would show products that belonged to another category in v16.
+  const foreign = [
+    ...new Set(
+      rows
+        .filter((row) => row.code22 && isos22.some((prefix) => row.code22.startsWith(prefix)))
+        .filter((row) => !isos.some((prefix) => row.code16.startsWith(prefix)))
+        .map((row) => row.code16)
+    ),
+  ].sort()
+  if (foreign.length > 0) needsReview = true
 
   let status
   if (unmapped.length === isos.length) status = 'not mapped'
   else if (unmapped.length > 0) status = 'partly unmapped'
   else if (unverified) status = 'unverified'
-  else if (invalid.length > 0) status = 'invalid code'
+  else if (isos22.some((code) => !ISO_CODE.test(code))) status = 'invalid code'
   else if (needsReview) status = 'review'
-  else status = unchanged ? 'same' : 'renumbered'
+  else status = sameSet(isos22, isos) ? 'same' : 'renumbered'
 
-  return { isos, isos22, unmapped, status }
+  let action
+  const writableStatus = ['same', 'renumbered', ...(args['include-review'] ? ['review'] : [])]
+  if (!writableStatus.includes(status)) action = 'skip: status'
+  else if (sameSet(current, isos22) && category.data?.isos22 != null) action = 'skip: up to date'
+  else if (current.length > 0 && !args['overwrite-manual']) action = 'skip: manual'
+  else action = 'update'
+
+  return { isos, isos22, current, unmapped, foreign, status, action }
 }
 
 const results = categories
@@ -86,29 +113,36 @@ const results = categories
   .map((category) => ({ category, ...classify(category) }))
   .sort((a, b) => a.category.title.localeCompare(b.category.title, 'nb'))
 
-const writable = new Set(['same', 'renumbered', ...(args['include-review'] ? ['review'] : [])])
-const sql = results
-  .filter((r) => writable.has(r.status))
+// Each update runs in a DO block that fails, and rolls back the whole transaction, when the row
+// was changed after the export or does not exist. Run with: psql -v ON_ERROR_STOP=1 -f isos22-update.sql
+const statements = results
+  .filter((r) => r.action === 'update')
   .map(({ category, isos22 }) => {
-    const current = category.data.isos22
-    const guard = current == null ? 'IS NULL' : `= ${sqlString(JSON.stringify(current))}::jsonb`
-    return (
-      `UPDATE category SET data = jsonb_set(data, '{isos22}', ${sqlString(JSON.stringify(isos22))}::jsonb)\n` +
-      `  WHERE id = ${sqlString(category.id)} AND data->'isos22' ${guard}; -- ${category.title.replaceAll(/[\r\n]/g, ' ')}`
-    )
+    const id = sqlString(category.id)
+    const stored = category.data.isos22 == null ? 'IS NULL' : `= ${sqlString(JSON.stringify(category.data.isos22))}::jsonb`
+    return [
+      `-- ${category.title.replaceAll(/[\r\n]/g, ' ')}`,
+      'DO $isos22$ BEGIN',
+      `  UPDATE category SET data = jsonb_set(data, '{isos22}', ${sqlString(JSON.stringify(isos22))}::jsonb)`,
+      `    WHERE id = ${id} AND data->'isos22' ${stored};`,
+      `  IF NOT FOUND THEN RAISE EXCEPTION 'Category % was changed after export or is missing', ${id}; END IF;`,
+      'END $isos22$;',
+    ].join('\n')
   })
 
 const csv = [
-  ['category', 'id', 'status', 'v16_isos', 'v22_isos', 'current_isos22', 'unmapped_v16_prefixes'].join(','),
+  ['category', 'id', 'status', 'action', 'v16_isos', 'v22_isos', 'current_isos22', 'unmapped_v16_prefixes', 'foreign_v16_codes'].join(','),
   ...results.map((r) =>
     [
       r.category.title,
       r.category.id,
       r.status,
+      r.action,
       r.isos.join(' '),
       r.isos22.join(' '),
-      (r.category.data.isos22 ?? []).join(' '),
+      r.current.join(' '),
       r.unmapped.join(' '),
+      r.foreign.join(' '),
     ]
       .map(csvCell)
       .join(',')
@@ -116,9 +150,14 @@ const csv = [
 ].join('\n')
 
 await mkdir(args.out, { recursive: true })
-await writeFile(`${args.out}/isos22-review.csv`, csv + '\n')
-await writeFile(`${args.out}/isos22-update.sql`, `BEGIN;\n${sql.join('\n')}\nCOMMIT;\n`)
+await writeFile(join(args.out, 'isos22-review.csv'), csv + '\n')
+await writeFile(join(args.out, 'isos22-update.sql'), `\\set ON_ERROR_STOP on\nBEGIN;\n${statements.join('\n')}\nCOMMIT;\n`)
 
-const counts = Object.entries(Object.groupBy(results, (r) => r.status)).map(([s, rs]) => `${s}: ${rs.length}`)
-console.log(`${results.length} categories with isos. ${counts.join(', ')}`)
-console.log(`${sql.length} UPDATE statements written to ${args.out}/isos22-update.sql`)
+const count = (key) =>
+  Object.entries(Object.groupBy(results, (r) => r[key]))
+    .map(([value, rs]) => `${value}: ${rs.length}`)
+    .join(', ')
+console.log(`${results.length} categories with isos.`)
+console.log(`Status: ${count('status')}`)
+console.log(`Action: ${count('action')}`)
+console.log(`${statements.length} updates written to ${join(args.out, 'isos22-update.sql')}`)

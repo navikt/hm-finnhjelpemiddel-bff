@@ -35,17 +35,36 @@ Clients therefore switch version by passing the parameter, without reading any `
 
 `scripts/isos22-from-isomap.mjs` prepares `data.isos22` from the verified ISO 2016 to 2022 map in hm-grunndata-register
 (`GET /api/v22/isomap/`). It is read-only: it writes a review CSV and an SQL file, and applies nothing.
+Input and output stay in `scripts/` and are ignored by git, because they contain category data.
 
 ```
-curl localhost:8083/admin/category > cats.json
-node scripts/isos22-from-isomap.mjs --isomap <isomap.json|url> --categories cats.json --out isos22-out
+curl -o scripts/cats.json localhost:8083/admin/category
+curl -o scripts/isomap.json <register>/api/v22/isomap/
+node scripts/isos22-from-isomap.mjs
 ```
 
-- `isos22-review.csv`: every category with ISOs, with derived v22 codes, current `isos22`, unmapped prefixes and a status
-  (`same`, `renumbered`, `review`, `unverified`, `partly unmapped`, `not mapped`).
-- `isos22-update.sql`: one guarded `UPDATE … jsonb_set` per `same` or `renumbered` category, in one transaction. The guard
-  skips a category that was edited after `cats.json` was fetched. `--include-review` also writes `review` categories
-  (split, merged or deleted codes).
+Options: `--isomap`, `--categories` and `--out` override the default paths (a URL works for the inputs).
+`--include-review` also writes SQL for `review` categories, and `--overwrite-manual` also writes SQL for categories whose
+current `isos22` differs from the derived value.
 
-Review the CSV, then run the SQL yourself. Run the script again when the register team has verified more mappings.
-Products only match v22 codes once the search index contains them.
+`scripts/isos22-out/isos22-review.csv` lists every category with ISOs: derived v22 codes, current `isos22`, unmapped
+v16 prefixes, foreign v16 codes, a `status` and an `action`.
+
+| Status | Meaning |
+|---|---|
+| `same` / `renumbered` | All prefixes are mapped and verified, without split, merge or delete |
+| `review` | Split, merged or deleted codes, or a v22 prefix that also covers v16 codes from outside the category (`foreign_v16_codes`) |
+| `unverified` | At least one matching isomap row is not verified |
+| `partly unmapped` / `not mapped` | Some or all v16 prefixes are missing from the isomap |
+
+`action` is `update`, `skip: status`, `skip: up to date` or `skip: manual` (current `isos22` is set and differs).
+
+`scripts/isos22-out/isos22-update.sql` contains one `DO` block per `update`. Each block stops with an error, and the
+transaction rolls back, if the category was changed after `cats.json` was exported. Run it in dev first:
+
+```
+psql -v ON_ERROR_STOP=1 -f scripts/isos22-out/isos22-update.sql
+```
+
+Run the script again when the register team has verified more mappings. Products only match v22 codes once the search
+index contains them.
