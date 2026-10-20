@@ -1,0 +1,39 @@
+name: hm-finnhjelpemiddel-bff-local
+
+services:
+  bff:
+    build: .
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:8083:8083"
+    environment:
+      SERVER_PORT: "8083"
+      DB_DRIVER: org.postgresql.Driver
+      DB_JDBC_URL: jdbc:postgresql://postgres:5432/finnhjelpemiddelbff
+      DB_USERNAME: finnhjelpemiddelbff
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD before starting Compose}
+      SEARCH_URL: ${SEARCH_URL:-http://host.docker.internal:8080/products/_search}
+      GRUNNDATA_DB_URL: ${GRUNNDATA_DB_URL:-https://finnhjelpemiddel-api.nav.no/import}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:18
+    ports:
+      - "127.0.0.1:5433:5432"
+    environment:
+      POSTGRES_DB: finnhjelpemiddelbff
+      POSTGRES_USER: finnhjelpemiddelbff
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD before starting Compose}
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres-data:

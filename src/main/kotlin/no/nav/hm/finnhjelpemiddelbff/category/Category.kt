@@ -49,7 +49,8 @@ data class CategoryOut(
     val id: UUID? = UUID.randomUUID(),
     val title: String,
     val subCategories: List<SubcategoryResponse>,
-    val data: CategoryData
+    val data: CategoryData,
+    val isoVersion: Int = 16
 )
 
 @Serdeable

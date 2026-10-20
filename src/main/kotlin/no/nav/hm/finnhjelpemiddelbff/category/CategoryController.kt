@@ -5,6 +5,7 @@ import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.QueryValue
 import io.swagger.v3.oas.annotations.tags.Tag
 import java.util.UUID
 import kotlinx.coroutines.runBlocking
@@ -17,26 +18,39 @@ class CategoryController(
 ) {
     companion object {
         private val LOG = LoggerFactory.getLogger(CategoryController::class.java)
+        private const val ISO_VERSION_16 = 16
+        private const val ISO_VERSION_22 = 22
+        private val SUPPORTED_ISO_VERSIONS = setOf(ISO_VERSION_16, ISO_VERSION_22)
     }
 
     @Get("/{category}")
-    fun getCategory(category: String): HttpResponse<*> = try {
-        categoryRepository.findByTitle(category)?.let { HttpResponse.ok(it.toOut()) }
-            ?: HttpResponse.badRequest("No category with id $category")
+    fun getCategory(category: String, @QueryValue isoVersion: Int? = null): HttpResponse<*> = try {
+        withIsoVersion(isoVersion) { version ->
+            categoryRepository.findByTitle(category)?.let { HttpResponse.ok(it.toOut(version)) }
+                ?: HttpResponse.badRequest("No category with id $category")
+        }
     } catch (exception: Exception) {
         LOG.error("Error when getting category $category", exception)
         HttpResponse.serverError(exception.message!!)
     }
 
     @Post("/ids")
-    fun getCategories(@Body categories: List<UUID>): HttpResponse<*> = try {
-        HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut() } })
+    fun getCategories(@Body categories: List<UUID>, @QueryValue isoVersion: Int? = null): HttpResponse<*> = try {
+        withIsoVersion(isoVersion) { version ->
+            HttpResponse.ok(categories.mapNotNull { runBlocking { categoryRepository.findById(it)?.toOut(version) } })
+        }
     } catch (exception: Exception) {
         LOG.error("Error when getting categories $categories", exception)
         HttpResponse.serverError(exception.message!!)
     }
 
-    private fun Category.toOut(): CategoryOut = CategoryOut(
+    private fun withIsoVersion(isoVersion: Int?, block: (Int) -> HttpResponse<*>): HttpResponse<*> {
+        val version = isoVersion ?: ISO_VERSION_16
+        return if (version in SUPPORTED_ISO_VERSIONS) block(version)
+        else HttpResponse.badRequest("Unsupported isoVersion $version")
+    }
+
+    private fun Category.toOut(isoVersion: Int): CategoryOut = CategoryOut(
         id = id,
         title = title,
         subCategories = subcategories?.let { subcategories ->
@@ -54,6 +68,8 @@ class CategoryController(
             ) }
 
         }.orEmpty(),
-        data = data
+        // Version 22 is returned in the v16 shape so clients read `isos` for either version.
+        data = if (isoVersion == ISO_VERSION_22) data.copy(isos = data.isos22.orEmpty()) else data,
+        isoVersion = isoVersion
     )
 }

@@ -13,3 +13,8 @@ out/
 .settings
 .classpath
 .factorypath
+
+# Local input and output for scripts/isos22-from-isomap.mjs (contains category data)
+scripts/cats.json
+scripts/isomap.json
+scripts/isos22-out/
