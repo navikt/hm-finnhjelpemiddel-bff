@@ -101,7 +101,7 @@ const classify = (category) => {
   let action
   const writableStatus = ['same', 'renumbered', ...(args['include-review'] ? ['review'] : [])]
   if (!writableStatus.includes(status)) action = 'skip: status'
-  else if (sameSet(current, isos22) && category.data?.isos22 != null) action = 'skip: up to date'
+  else if (sameSet(current, isos22)) action = 'skip: up to date'
   else if (current.length > 0 && !args['overwrite-manual']) action = 'skip: manual'
   else action = 'update'
 
@@ -119,13 +119,14 @@ const statements = results
   .filter((r) => r.action === 'update')
   .map(({ category, isos22 }) => {
     const id = sqlString(category.id)
-    const stored = category.data.isos22 == null ? 'IS NULL' : `= ${sqlString(JSON.stringify(category.data.isos22))}::jsonb`
+    const stored = sqlString(JSON.stringify(category.data.isos22 ?? []))
     return [
       `-- ${category.title.replaceAll(/[\r\n]/g, ' ')}`,
       'DO $isos22$ BEGIN',
       `  UPDATE category SET data = jsonb_set(data, '{isos22}', ${sqlString(JSON.stringify(isos22))}::jsonb)`,
-      // NULLIF treats a stored JSON null like a missing key. The isos check aborts if the v16 source changed.
-      `    WHERE id = ${id} AND NULLIF(data->'isos22', 'null'::jsonb) ${stored}`,
+      // The admin API omits empty lists, so a missing key, a JSON null and [] all mean "not set".
+      // The isos check aborts if the v16 source changed.
+      `    WHERE id = ${id} AND COALESCE(NULLIF(data->'isos22', 'null'::jsonb), '[]'::jsonb) = ${stored}::jsonb`,
       `      AND data->'isos' = ${sqlString(JSON.stringify(category.data.isos))}::jsonb;`,
       `  IF NOT FOUND THEN RAISE EXCEPTION 'Category % was changed after export or is missing', ${id}; END IF;`,
       'END $isos22$;',
