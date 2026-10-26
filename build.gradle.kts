@@ -14,7 +14,7 @@ plugins {
 
 group = "no.nav.hm"
 
-val micronautVersion = "5.0.6"
+val micronautVersion = "5.2.2"
 val poiVersion = "5.5.0"
 val jvmTarget = "25"
 val grunndataDtoVersion = "202511170912"
